@@ -26,6 +26,7 @@
 #pragma once
 
 #include "../Macros.h"
+#include <stddef.h>
 
 // Anything that has done a #define new <blah> will screw operator new definitions up
 // so undefine

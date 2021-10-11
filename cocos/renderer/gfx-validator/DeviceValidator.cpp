@@ -41,6 +41,8 @@
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 
+#include <string.h>
+
 namespace cc {
 namespace gfx {
 

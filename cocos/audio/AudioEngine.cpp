@@ -43,7 +43,7 @@
 #elif CC_PLATFORM == CC_PLATFORM_WINRT
     #include "audio/winrt/AudioEngine-winrt.h"
 #elif CC_PLATFORM == CC_PLATFORM_LINUX
-    #include "audio/linux/AudioEngine-linux.h"
+    #include "audio/oalsoft/AudioEngine-soft.h"
 #elif CC_PLATFORM == CC_PLATFORM_TIZEN
     #include "audio/tizen/AudioEngine-tizen.h"
 #endif

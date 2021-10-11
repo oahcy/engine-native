@@ -30,6 +30,8 @@
 #include "DeviceValidator.h"
 #include "ValidationUtils.h"
 
+#include <string.h>
+
 namespace cc {
 namespace gfx {
 

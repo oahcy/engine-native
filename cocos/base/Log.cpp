@@ -27,6 +27,7 @@
 
 #include <string>
 #include <vector>
+#include<stdarg.h>
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     #ifndef WIN32_LEAN_AND_MEAN
@@ -123,7 +124,7 @@ void Log::logMessage(LogType type, LogLevel level, const char *formats, ...) {
     va_start(args, formats);
     // p += StringUtil::vprintf(p, last, formats, args);
 
-    ptrdiff_t count = (last - p);
+    std::ptrdiff_t count = (last - p);
     int       ret   = vsnprintf(p, count, formats, args);
     if (ret >= count - 1) {
         p += (count - 1);

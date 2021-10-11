@@ -38,8 +38,8 @@
 namespace cc {
 
 const ValueVector    VALUE_VECTOR_NULL;
-const ValueMap       VALUE_MAP_NULL;
-const ValueMapIntKey VALUE_MAP_INT_KEY_NULL;
+const ValueMap       VALUE_MAP_NULL = {};
+const ValueMapIntKey VALUE_MAP_INT_KEY_NULL = {};
 
 const Value Value::VALUE_NULL;
 

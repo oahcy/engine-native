@@ -34,6 +34,13 @@ struct UBOGlobal;
 struct UBOCamera;
 struct UBOShadow;
 
+struct enumClassHash {
+    template <typename T>
+    std::size_t operator()(T t) const {
+        return static_cast<std::size_t>(t);
+    }
+};
+
 class CC_DLL ForwardPipeline : public RenderPipeline {
 public:
     ForwardPipeline()           = default;
@@ -61,7 +68,7 @@ private:
     gfx::BufferList                                   _lightBuffers;
     UintList                                          _lightIndexOffsets;
     UintList                                          _lightIndices;
-    unordered_map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
+    unordered_map<gfx::ClearFlags, gfx::RenderPass *, enumClassHash> _renderPasses;
 };
 
 } // namespace pipeline
