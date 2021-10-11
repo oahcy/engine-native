@@ -28,6 +28,7 @@
 #include "platform/FileUtils.h"
 #include <sstream>
 #include <stdio.h>
+#include <string.h>
 
 void HttpCookie::readFile() {
     std::string inString = cc::FileUtils::getInstance()->getStringFromFile(_cookieFileName);

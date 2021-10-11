@@ -31,6 +31,7 @@
 
 #include <fstream>
 #include <stdio.h>
+#include <algorithm>
 
 #define KEY_VERSION          "version"
 #define KEY_PACKAGE_URL      "packageUrl"

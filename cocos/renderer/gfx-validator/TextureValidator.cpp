@@ -35,7 +35,14 @@ namespace cc {
 namespace gfx {
 
 namespace {
-unordered_map<Format, Feature> featureCheckMap{
+struct enumClassHash {
+    template <typename T>
+    std::size_t operator()(T t) const {
+        return static_cast<std::size_t>(t);
+    }
+};
+
+unordered_map<Format, Feature, enumClassHash> featureCheckMap{
     {Format::RGB8, Feature::FORMAT_RGB8},
     {Format::R11G11B10F, Feature::FORMAT_R11G11B10F},
 };

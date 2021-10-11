@@ -27,6 +27,7 @@
 
 #include "base/Data.h"
 #include "base/Log.h"
+#include <string.h>
 
 namespace cc {
 

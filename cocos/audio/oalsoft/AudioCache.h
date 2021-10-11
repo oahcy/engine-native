@@ -37,6 +37,8 @@
     #include <OpenalSoft/al.h>
 #elif CC_PLATFORM == CC_PLATFORM_OHOS
     #include <AL/al.h>
+#elif CC_PLATFORM == CC_PLATFORM_LINUX
+    #include <AL/al.h>
 #endif
 #include "audio/oalsoft/AudioMacros.h"
 #include "base/Macros.h"

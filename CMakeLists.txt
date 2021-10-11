@@ -1,4 +1,5 @@
-
+cmake_minimum_required(VERSION 3.8)
+project(engin-native)
 
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/predefine.cmake)
 
@@ -140,6 +141,24 @@ if(USE_AUDIO)
                      cocos/audio/include/Export.h
     )
     if(WINDOWS)
+        cocos_source_files(
+            cocos/audio/oalsoft/AudioCache.cpp
+            cocos/audio/oalsoft/AudioCache.h
+            cocos/audio/oalsoft/AudioDecoder.cpp
+            cocos/audio/oalsoft/AudioDecoder.h
+            cocos/audio/oalsoft/AudioDecoderManager.cpp
+            cocos/audio/oalsoft/AudioDecoderManager.h
+            cocos/audio/oalsoft/AudioDecoderMp3.cpp
+            cocos/audio/oalsoft/AudioDecoderMp3.h
+            cocos/audio/oalsoft/AudioDecoderOgg.cpp
+            cocos/audio/oalsoft/AudioDecoderOgg.h
+            cocos/audio/oalsoft/AudioEngine-soft.cpp
+            cocos/audio/oalsoft/AudioEngine-soft.h
+            cocos/audio/oalsoft/AudioMacros.h
+            cocos/audio/oalsoft/AudioPlayer.cpp
+            cocos/audio/oalsoft/AudioPlayer.h
+        )
+    elseif(LINUX)
         cocos_source_files(
             cocos/audio/oalsoft/AudioCache.cpp
             cocos/audio/oalsoft/AudioCache.h
