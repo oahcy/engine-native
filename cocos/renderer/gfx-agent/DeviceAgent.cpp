@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include <cstddef>
+#include <string.h>
 #include "base/CoreStd.h"
 #include "base/threading/MessageQueue.h"
 

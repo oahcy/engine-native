@@ -30,6 +30,8 @@
 
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     #include "vorbis/vorbisfile.h"
+#elif CC_PLATFORM == CC_PLATFORM_LINUX
+    #include "vorbis/vorbisfile.h"
 #elif CC_PLATFORM == CC_PLATFORM_OHOS
     #include "ivorbisfile.h"
 #endif

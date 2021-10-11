@@ -29,6 +29,7 @@
 #include <cassert>
 #include <cctype>
 #include <string>
+#include <string.h>
 #include "base/Config.h" // CC_USE_JPEG, CC_USE_WEBP
 
 #if CC_USE_JPEG

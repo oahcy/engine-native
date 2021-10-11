@@ -38,6 +38,8 @@
 #include "base/job-system/JobSystem.h"
 #include "base/threading/MessageQueue.h"
 #include "base/threading/ThreadSafeLinearAllocator.h"
+#include <string.h>
+
 
 namespace cc {
 namespace gfx {
