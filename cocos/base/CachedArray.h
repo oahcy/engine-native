@@ -28,6 +28,7 @@
 #include "base/Object.h"
 #include "base/TypeDef.h"
 #include <limits.h>
+#include <string.h>
 
 namespace cc {
 
