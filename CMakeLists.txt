@@ -2342,6 +2342,16 @@ if(APPLE)
 
 endif()
 
+if(LINUX)
+    find_package(Threads)
+    target_link_libraries(cocos2d PUBLIC
+        dl
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${Threads_LIBRARIES}
+        ${CC_EXTERNAL_LIBS}
+    )
+endif()
+
 source_group(TREE ${CWD} PREFIX "Source Files" FILES ${COCOS2D_SOURCE_LIST})
 
 
