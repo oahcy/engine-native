@@ -35,6 +35,8 @@
     #include "platform/mac/modules/Screen.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/Screen.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/modules/Screen.h"
 #endif
 
 namespace cc {

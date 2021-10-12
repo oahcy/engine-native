@@ -34,6 +34,8 @@
     #include "platform/mac/modules/System.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/System.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/modules/System.h"
 #endif
 
 namespace cc {

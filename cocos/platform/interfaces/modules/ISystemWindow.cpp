@@ -32,6 +32,8 @@
     #include "platform/mac/modules/SystemWindow.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/SystemWindow.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/modules/SystemWindow.h"
 #endif
 
 namespace cc {

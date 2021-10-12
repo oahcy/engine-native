@@ -22,26 +22,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-
-#include "platform/interfaces/modules/IVibrator.h"
-
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include "platform/win32/interfaces/Network.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
+INetwork::NetworkType Network::getNetworkType() const {
+    return INetwork::NetworkType::LAN;
 }
 
 } // namespace cc

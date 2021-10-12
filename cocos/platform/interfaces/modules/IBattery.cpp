@@ -33,6 +33,8 @@
     #include "platform/mac/modules/Battery.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/Battery.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/ios/modules/Battery.h"
 #endif
 
 namespace cc {

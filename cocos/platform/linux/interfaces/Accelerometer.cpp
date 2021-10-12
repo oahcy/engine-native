@@ -23,25 +23,18 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IVibrator.h"
-
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include "platform/win32/interfaces/Accelerometer.h"
 
 namespace cc {
+void Accelerometer::setAccelerometerEnabled(bool isEnabled) {
+}
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
+void Accelerometer::setAccelerometerInterval(float interval) {
+}
+
+const Accelerometer::MotionValue& Accelerometer::getDeviceMotionValue() {
+    static MotionValue motionValue;
+    return motionValue;
 }
 
 } // namespace cc

@@ -33,6 +33,8 @@
     #include "platform/mac/modules/Accelerometer.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/Accelerometer.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/modules/Accelerometer.h"
 #endif
 
 namespace cc {

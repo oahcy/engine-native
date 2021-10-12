@@ -23,25 +23,28 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IVibrator.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include "platform/os-interfaces/modules/IAccelerometer.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
-}
+class Accelerometer : public IAccelerometer {
+public:
+    /**
+     * To enable or disable accelerometer.
+     */
+    void setAccelerometerEnabled(bool isEnabled) override;
+
+    /**
+     *  Sets the interval of accelerometer.
+     */
+    void setAccelerometerInterval(float interval) override;
+
+    /**
+     *  Gets the motion value of current device.
+     */
+    const MotionValue &getDeviceMotionValue() override;
+};
 
 } // namespace cc

@@ -23,25 +23,39 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IVibrator.h"
+#include "platform/win32/interfaces/Screen.h"
+#include "base/Macros.h"
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include <Windows.h>
 
 namespace cc {
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
+int Screen::getDPI() const {
+    static int dpi = -1;
+    if (dpi == -1) {
+        HDC hScreenDC = GetDC(nullptr);
+        int PixelsX   = GetDeviceCaps(hScreenDC, HORZRES);
+        int MMX       = GetDeviceCaps(hScreenDC, HORZSIZE);
+        ReleaseDC(nullptr, hScreenDC);
+        dpi = static_cast<int>(254.0f * PixelsX / MMX / 10);
+    }
+    return dpi;
+}
+
+float Screen::getDevicePixelRatio() const {
+    return 1;
+}
+
+void Screen::setKeepScreenOn(bool value) {
+    CC_UNUSED_PARAM(value);
+}
+
+Screen::Orientation Screen::getDeviceOrientation() const {
+    return Orientation::PORTRAIT;
+}
+
+Vec4 Screen::getSafeAreaEdge() const {
+    return cc::Vec4();
 }
 
 } // namespace cc

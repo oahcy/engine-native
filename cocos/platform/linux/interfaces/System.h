@@ -23,25 +23,43 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IVibrator.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include "platform/os-interfaces/modules/ISystem.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
-}
+class System : public ISystem {
+public:
+    /**
+     @brief Get target system type.
+     */
+    OSType getOSType() const override;
+    /**
+     @brief Get target device model.
+     */
+    std::string getDeviceModel() const override;
+    /**
+     @brief Get current language config.
+     @return Current language config.
+     */
+    LanguageType getCurrentLanguage() const override;
+    /**
+     @brief Get current language iso 639-1 code.
+     @return Current language iso 639-1 code.
+     */
+    std::string getCurrentLanguageCode() const override;
+    /**
+     @brief Get system version.
+     @return system version.
+     */
+    std::string getSystemVersion() const override;
+    /**
+     @brief Open url in default browser.
+     @param String with url to open.
+     @return True if the resource located by the URL was successfully opened; otherwise false.
+     */
+    bool openURL(const std::string& url) override;
+};
 
 } // namespace cc

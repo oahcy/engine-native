@@ -23,25 +23,60 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IVibrator.h"
+#include "platform/win32/interfaces/SystemWindow.h"
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Vibrator.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Vibrate.h"
-#endif
+#include "base/Log.h"
+// SDL headers
+#include <functional>
+#include "bindings/event/EventDispatcher.h"
+#include "platform/IEventDispatch.h"
+#include "platform/win32/WindowsPlatform.h"
+#include "sdl2/SDL.h"
+#include "sdl2/SDL_main.h"
+#include "sdl2/SDL_syswm.h"
+
+
+namespace {
+
+} // namespace
 
 namespace cc {
+SystemWindow::SystemWindow() {
+}
 
-// static
-OSInterface::Ptr IVibrator::createVibratorInterface() {
-    return std::make_shared<Vibrator>();
+SystemWindow::~SystemWindow() {
+}
+
+bool SystemWindow::createWindow(const char *title,
+                                int x, int y, int w,
+                                int h, int flags) {
+    // Create window
+
+    WindowsPlatform *platform = dynamic_cast<WindowsPlatform *>(BasePlatform::getPlatform());
+    CC_ASSERT(platform != nullptr);
+    platform->createWindow(title, x, y, w, h, flags);
+    _width  = w;
+    _height = h;
+    return true;
+}
+
+uintptr_t SystemWindow::getWindowHandler() const {
+    //return _handle;
+    WindowsPlatform *platform = dynamic_cast<WindowsPlatform *>(BasePlatform::getPlatform());
+    CC_ASSERT(platform != nullptr);
+    return platform->getWindowHandler();
+}
+
+void SystemWindow::setCursorEnabled(bool value) {
+    SDL_SetRelativeMouseMode(value ? SDL_FALSE : SDL_TRUE);
+}
+
+void SystemWindow::copyTextToClipboard(const std::string &text) {
+    //TODO
+}
+
+SystemWindow::Size SystemWindow::getViewSize() const {
+    return Size{static_cast<float>(_width), static_cast<float>(_height)};
 }
 
 } // namespace cc

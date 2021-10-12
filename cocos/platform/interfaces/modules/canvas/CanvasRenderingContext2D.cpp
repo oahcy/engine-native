@@ -40,6 +40,8 @@
     #include "platform/java/modules/CanvasRenderingContext2DDelegate.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/apple/modules/CanvasRenderingContext2DDelegate.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/modules/CanvasRenderingContext2DDelegate.h"
 #endif
 
 using Vec2    = std::array<float, 2>;
