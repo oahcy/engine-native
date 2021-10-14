@@ -39,6 +39,8 @@ else()
     return()
 endif()
 
+MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")
+
 # platform macros
 add_definitions(-DCC_PLATFORM_WINDOWS=${CC_PLATFORM_WINDOWS})
 add_definitions(-DCC_PLATFORM_MAC_OSX=${CC_PLATFORM_MAC_OSX})
