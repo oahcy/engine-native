@@ -42,7 +42,7 @@ namespace cc {
 ISystem::~ISystem() = default;
 
 ISystem::Ptr ISystem::createSystemInterface() {
-    return std::make_shared<System>();
+    return nullptr;//std::make_shared<System>();
 }
 
 std::string ISystem::getCurrentLanguageToString() {

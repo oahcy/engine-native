@@ -453,6 +453,11 @@ elseif(MACOSX OR IOS)
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.mm
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.h
     )
+elseif(LINUX)
+    cocos_source_files(
+        cocos/platform/linux/interfaces/CanvasRenderingContext2DDelegate.cpp
+        cocos/platform/linux/interfaces/CanvasRenderingContext2DDelegate.h
+    )
 endif()
 
 ############ platform : Interface implementation of windows
@@ -724,14 +729,14 @@ if(NOT APPLE AND USE_SOCKET)
     )
 endif()
 
-if(WINDOWS)
+if(WINDOWS OR LINUX)
     cocos_source_files(
         NO_WERROR    cocos/network/Downloader-curl.cpp
                      cocos/network/Downloader-curl.h
     )
 endif()
 
-if(WINDOWS OR MACOSX)
+if(WINDOWS OR MACOSX OR LINUX)
     cocos_source_files(
         NO_WERROR    cocos/network/HttpClient.cpp
     )
@@ -851,6 +856,11 @@ elseif(APPLE)
             NO_WERROR    cocos/platform/ios/View.mm     # CAMetalLayer bug for apple
         )
     endif()
+elseif(LINUX)
+    cocos_source_files(MODULE ccfilesystem
+        cocos/platform/linux/FileUtils-linux.cpp
+        cocos/platform/linux/FileUtils-linux.h
+    )
 endif()
 
 ##### renderer
@@ -1808,6 +1818,10 @@ elseif(WIN32)
     cocos_source_files(
         NO_WERROR    cocos/bindings/manual/jsb_platfrom_win32.cpp
     )
+elseif(LINUX)
+    cocos_source_files(
+        NO_WERROR    cocos/bindings/manual/jsb_platfrom_linux.cpp
+    )
 endif()
 
 ############# module bindings
@@ -1998,6 +2012,12 @@ elseif(WIN32)
     if(USE_EDIT_BOX)
         cocos_source_files(
             NO_WERROR    cocos/ui/edit-box/EditBox-win32.cpp
+        )
+    endif()
+elseif(LINUX)
+    if(USE_EDIT_BOX)
+        cocos_source_files(
+            NO_WERROR    cocos/ui/edit-box/EditBox-linux.cpp
         )
     endif()
 endif()
@@ -2343,11 +2363,7 @@ if(APPLE)
 endif()
 
 if(LINUX)
-    find_package(Threads)
     target_link_libraries(cocos2d PUBLIC
-        dl
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${Threads_LIBRARIES}
         ${CC_EXTERNAL_LIBS}
     )
 endif()

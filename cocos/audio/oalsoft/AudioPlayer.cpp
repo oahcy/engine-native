@@ -34,6 +34,7 @@
 #include "base/Log.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 using namespace cc; //NOLINT
 

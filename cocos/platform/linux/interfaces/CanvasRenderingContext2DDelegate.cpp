@@ -23,7 +23,7 @@
  THE SOFTWARE.                                                                    \
  ****************************************************************************/
 
-#include "platform/win32/interfaces/CanvasRenderingContext2DDelegate.h"
+#include "platform/linux/interfaces/CanvasRenderingContext2DDelegate.h"
 
 namespace {
 void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -46,8 +46,8 @@ void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, 
 } // namespace
 
 namespace cc {
-    CanvasRenderingContext2DDelegate();
-    ~CanvasRenderingContext2DDelegate() {}
+    CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {};
+    CanvasRenderingContext2DDelegate::~CanvasRenderingContext2DDelegate() {}
 
     void CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {}
     void CanvasRenderingContext2DDelegate::beginPath() {}
@@ -60,15 +60,15 @@ namespace cc {
     void CanvasRenderingContext2DDelegate::clearRect(float /*x*/, float /*y*/, float w, float h) {}
     void CanvasRenderingContext2DDelegate::fillRect(float x, float y, float w, float h) {}
     void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x, float y, float /*maxWidth*/) {}
-    void CanvasRenderingContext2DDelegate::strokeText(const std::string &text, float /*x*/, float /*y*/, float /*maxWidth*/) const;
-    Size            measureText(const std::string &text) {}
+    void CanvasRenderingContext2DDelegate::strokeText(const std::string &text, float /*x*/, float /*y*/, float /*maxWidth*/) const {};
+    cc::CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::measureText(const std::string &text) { return std::array<float, 2>{0,0};}
     void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName, float fontSize, bool bold, bool italic, bool oblique, bool smallCaps) {}
     void CanvasRenderingContext2DDelegate::setTextAlign(CanvasTextAlign align) {}
     void CanvasRenderingContext2DDelegate::setTextBaseline(CanvasTextBaseline baseline) {}
     void CanvasRenderingContext2DDelegate::setFillStyle(float r, float g, float b, float a) {}
     void CanvasRenderingContext2DDelegate::setStrokeStyle(float r, float g, float b, float a) {}
     void CanvasRenderingContext2DDelegate::setLineWidth(float lineWidth) {}
-    const cc::Data &getDataRef() const {}
+    const cc::Data &CanvasRenderingContext2DDelegate::getDataRef() const {}
     void CanvasRenderingContext2DDelegate::fill() {}
     void CanvasRenderingContext2DDelegate::setLineCap(const std::string &lineCap) {}
     void CanvasRenderingContext2DDelegate::setLineJoin(const std::string &lineCap) {}
