@@ -2364,6 +2364,7 @@ endif()
 
 if(LINUX)
     target_link_libraries(cocos2d PUBLIC
+        dl
         ${CC_EXTERNAL_LIBS}
     )
 endif()
