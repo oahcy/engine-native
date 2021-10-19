@@ -23,46 +23,37 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include <iostream>
-
-#include "platform/os-interfaces/modules/ISystemWindow.h"
-
-struct SDL_Window;
-struct SDL_WindowEvent;
-
+#include "platform/linux/modules/Screen.h"
+#include "base/Macros.h"
 namespace cc {
 
-class SystemWindow : public ISystemWindow {
-public:
-    explicit SystemWindow();
-    ~SystemWindow() override;
+int Screen::getDPI() const {
+    static int dpi = -1;
+    return dpi;
+}
 
-    class Delegate {
-    public:
-        virtual ~Delegate()                              = default;
-        virtual bool      createWindow(const char* title,
-                                       int x, int y, int w,
-                                       int h, int flags) = 0;
-        virtual uintptr_t getWindowHandler() const       = 0;
-    };
+float Screen::getDevicePixelRatio() const {
+    return 1;
+}
 
-    bool      createWindow(const char* title,
-                           int x, int y, int w,
-                           int h, int flags) override;
-    uintptr_t getWindowHandler() const override;
+void Screen::setKeepScreenOn(bool value) {
+    CC_UNUSED_PARAM(value);
+}
 
-    Size getViewSize() const override;
-    /*
-     @brief enable/disable(lock) the cursor, default is enabled
-     */
-    void setCursorEnabled(bool value) override;
-    void copyTextToClipboard(const std::string& text) override;
+Screen::Orientation Screen::getDeviceOrientation() const {
+    return Orientation::PORTRAIT;
+}
 
-private:
-    int _width{0};
-    int _height{0};
-};
+Vec4 Screen::getSafeAreaEdge() const {
+    return cc::Vec4();
+}
+
+void Screen::setDisplayStats(bool isShow) {
+    return;
+}
+
+bool Screen::isDisplayStats() {
+    return true;
+}
 
 } // namespace cc

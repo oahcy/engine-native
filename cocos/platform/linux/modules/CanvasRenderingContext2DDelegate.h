@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "platform/os-interfaces/modules/canvas/ICanvasRenderingContext2D.h"
+#include "platform/interfaces/modules/canvas/ICanvasRenderingContext2D.h"
 
 #include <array>
 #include <cstdint>

@@ -23,60 +23,28 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/win32/interfaces/SystemWindow.h"
+#pragma once
 
-#include "base/Log.h"
-// SDL headers
-#include <functional>
-#include "bindings/event/EventDispatcher.h"
-#include "platform/IEventDispatch.h"
-#include "platform/win32/WindowsPlatform.h"
-#include "sdl2/SDL.h"
-#include "sdl2/SDL_main.h"
-#include "sdl2/SDL_syswm.h"
-
-
-namespace {
-
-} // namespace
+#include "platform/interfaces/modules/IAccelerometer.h"
 
 namespace cc {
-SystemWindow::SystemWindow() {
-}
 
-SystemWindow::~SystemWindow() {
-}
+class Accelerometer : public IAccelerometer {
+public:
+    /**
+     * To enable or disable accelerometer.
+     */
+    void setAccelerometerEnabled(bool isEnabled) override;
 
-bool SystemWindow::createWindow(const char *title,
-                                int x, int y, int w,
-                                int h, int flags) {
-    // Create window
+    /**
+     *  Sets the interval of accelerometer.
+     */
+    void setAccelerometerInterval(float interval) override;
 
-    WindowsPlatform *platform = dynamic_cast<WindowsPlatform *>(BasePlatform::getPlatform());
-    CC_ASSERT(platform != nullptr);
-    platform->createWindow(title, x, y, w, h, flags);
-    _width  = w;
-    _height = h;
-    return true;
-}
-
-uintptr_t SystemWindow::getWindowHandler() const {
-    //return _handle;
-    WindowsPlatform *platform = dynamic_cast<WindowsPlatform *>(BasePlatform::getPlatform());
-    CC_ASSERT(platform != nullptr);
-    return platform->getWindowHandler();
-}
-
-void SystemWindow::setCursorEnabled(bool value) {
-    SDL_SetRelativeMouseMode(value ? SDL_FALSE : SDL_TRUE);
-}
-
-void SystemWindow::copyTextToClipboard(const std::string &text) {
-    //TODO
-}
-
-SystemWindow::Size SystemWindow::getViewSize() const {
-    return Size{static_cast<float>(_width), static_cast<float>(_height)};
-}
+    /**
+     *  Gets the motion value of current device.
+     */
+    const MotionValue &getDeviceMotionValue() override;
+};
 
 } // namespace cc

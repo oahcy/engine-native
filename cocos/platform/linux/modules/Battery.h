@@ -25,17 +25,13 @@
 
 #pragma once
 
-#include "platform/os-interfaces/modules/IScreen.h"
+#include "platform/interfaces/modules/IBattery.h"
 
 namespace cc {
 
-class Screen : public IScreen {
+class Battery : public IBattery {
 public:
-    int         getDPI() const override;
-    float       getDevicePixelRatio() const override;
-    void        setKeepScreenOn(bool value) override;
-    Orientation getDeviceOrientation() const override;
-    Vec4        getSafeAreaEdge() const override;
+    float getBatteryLevel() const override;
 };
 
 } // namespace cc

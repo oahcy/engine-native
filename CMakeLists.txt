@@ -455,8 +455,8 @@ elseif(MACOSX OR IOS)
     )
 elseif(LINUX)
     cocos_source_files(
-        cocos/platform/linux/interfaces/CanvasRenderingContext2DDelegate.cpp
-        cocos/platform/linux/interfaces/CanvasRenderingContext2DDelegate.h
+        cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.cpp
+        cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.h
     )
 endif()
 
@@ -544,6 +544,23 @@ elseif(IOS)
         cocos/platform/ios/modules/SystemWindow.mm
         cocos/platform/ios/modules/SystemWindow.h
    )
+elseif(LINUX)
+    cocos_source_files(
+        cocos/platform/linux/modules/Accelerometer.cpp
+        cocos/platform/linux/modules/Accelerometer.h
+        cocos/platform/linux/modules/Battery.cpp
+        cocos/platform/linux/modules/Battery.h
+        cocos/platform/linux/modules/Screen.cpp
+        cocos/platform/linux/modules/Screen.h
+        cocos/platform/linux/modules/Network.cpp
+        cocos/platform/linux/modules/Network.h
+        cocos/platform/linux/modules/Vibrate.cpp
+        cocos/platform/linux/modules/Vibrate.h
+        cocos/platform/linux/modules/System.cpp
+        cocos/platform/linux/modules/System.h
+        cocos/platform/linux/modules/SystemWindow.cpp
+        cocos/platform/linux/modules/SystemWindow.h
+    )
 endif()
 
 ############ module log

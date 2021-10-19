@@ -22,23 +22,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-
-#pragma once
-
-#include "platform/os-interfaces/modules/IVibrate.h"
+#include "platform/linux/modules/Battery.h"
 
 namespace cc {
 
-class Vibrate : public IVibrate {
-public:
-    /**
-     * Vibrate for the specified amount of time.
-     * If vibrate is not supported, then invoking this method has no effect.
-     * Some platforms limit to a maximum duration of 5 seconds.
-     * Duration is ignored on iOS due to API limitations.
-     * @param duration The duration in seconds.
-     */
-    void vibrate(float duration) override;
-};
+float Battery::getBatteryLevel() const {
+    return 1.0F;
+}
 
 } // namespace cc

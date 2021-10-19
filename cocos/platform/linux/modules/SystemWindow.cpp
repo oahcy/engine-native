@@ -23,15 +23,45 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "platform/linux/modules/SystemWindow.h"
 
-#include "platform/os-interfaces/modules/INetwork.h"
+#include "base/Log.h"
+// SDL headers
+#include <functional>
+#include "bindings/event/EventDispatcher.h"
+#include "platform/IEventDispatch.h"
+
+namespace {
+
+} // namespace
 
 namespace cc {
+SystemWindow::SystemWindow() {
+}
 
-class Network : public INetwork {
-public:
-    NetworkType getNetworkType() const override;
-};
+SystemWindow::~SystemWindow() {
+}
+
+bool SystemWindow::createWindow(const char *title,
+                                int x, int y, int w,
+                                int h, int flags) {
+    // Create window
+    return true;
+}
+
+uintptr_t SystemWindow::getWindowHandler() const {
+    return 0;
+}
+
+void SystemWindow::setCursorEnabled(bool value) {
+}
+
+void SystemWindow::copyTextToClipboard(const std::string &text) {
+    //TODO
+}
+
+SystemWindow::Size SystemWindow::getViewSize() const {
+    return Size{static_cast<float>(_width), static_cast<float>(_height)};
+}
 
 } // namespace cc

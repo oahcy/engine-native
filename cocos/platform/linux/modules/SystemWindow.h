@@ -23,39 +23,46 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/win32/interfaces/Screen.h"
-#include "base/Macros.h"
+#pragma once
 
-#include <Windows.h>
+#include <iostream>
+
+#include "platform/interfaces/modules/ISystemWindow.h"
+
+struct SDL_Window;
+struct SDL_WindowEvent;
 
 namespace cc {
 
-int Screen::getDPI() const {
-    static int dpi = -1;
-    if (dpi == -1) {
-        HDC hScreenDC = GetDC(nullptr);
-        int PixelsX   = GetDeviceCaps(hScreenDC, HORZRES);
-        int MMX       = GetDeviceCaps(hScreenDC, HORZSIZE);
-        ReleaseDC(nullptr, hScreenDC);
-        dpi = static_cast<int>(254.0f * PixelsX / MMX / 10);
-    }
-    return dpi;
-}
+class SystemWindow : public ISystemWindow {
+public:
+    explicit SystemWindow();
+    ~SystemWindow() override;
 
-float Screen::getDevicePixelRatio() const {
-    return 1;
-}
+    class Delegate {
+    public:
+        virtual ~Delegate()                              = default;
+        virtual bool      createWindow(const char* title,
+                                       int x, int y, int w,
+                                       int h, int flags) = 0;
+        virtual uintptr_t getWindowHandler() const       = 0;
+    };
 
-void Screen::setKeepScreenOn(bool value) {
-    CC_UNUSED_PARAM(value);
-}
+    bool      createWindow(const char* title,
+                           int x, int y, int w,
+                           int h, int flags) override;
+    uintptr_t getWindowHandler() const override;
 
-Screen::Orientation Screen::getDeviceOrientation() const {
-    return Orientation::PORTRAIT;
-}
+    Size getViewSize() const override;
+    /*
+     @brief enable/disable(lock) the cursor, default is enabled
+     */
+    void setCursorEnabled(bool value) override;
+    void copyTextToClipboard(const std::string& text) override;
 
-Vec4 Screen::getSafeAreaEdge() const {
-    return cc::Vec4();
-}
+private:
+    int _width{0};
+    int _height{0};
+};
 
 } // namespace cc

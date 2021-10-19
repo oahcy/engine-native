@@ -22,12 +22,19 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-#include "platform/win32/interfaces/Battery.h"
+
+#include "Accelerometer.h"
 
 namespace cc {
+void Accelerometer::setAccelerometerEnabled(bool isEnabled) {
+}
 
-float Battery::getBatteryLevel() const {
-    return 1.0F;
+void Accelerometer::setAccelerometerInterval(float interval) {
+}
+
+const Accelerometer::MotionValue& Accelerometer::getDeviceMotionValue() {
+    static MotionValue motionValue;
+    return motionValue;
 }
 
 } // namespace cc

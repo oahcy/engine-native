@@ -22,12 +22,36 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-#include "platform/win32/interfaces/Network.h"
+
+#include "platform/linux/modules/System.h"
 
 namespace cc {
+using OSType = System::OSType;
 
-INetwork::NetworkType Network::getNetworkType() const {
-    return INetwork::NetworkType::LAN;
+OSType System::getOSType() const {
+    return OSType::WINDOWS;
 }
 
+std::string System::getDeviceModel() const {
+    return "Windows";
+}
+
+System::LanguageType System::getCurrentLanguage() const {
+    LanguageType ret = LanguageType::ENGLISH;
+    return ret;
+}
+
+std::string System::getCurrentLanguageCode() const {
+    std::string code;
+    return code;
+}
+
+std::string System::getSystemVersion() const {
+    char    buff[256] = {0};
+    return buff;
+}
+
+bool System::openURL(const std::string& url) {
+    return true;
+}
 } // namespace cc
