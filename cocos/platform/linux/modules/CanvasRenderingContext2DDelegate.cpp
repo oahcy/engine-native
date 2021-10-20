@@ -26,6 +26,7 @@
 #include "platform/linux/modules/CanvasRenderingContext2DDelegate.h"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_syswm.h"
+#include "platform/linux/LinuxPlatform.h"
 
 namespace {
 #define RGB(r,g,b)          ((unsigned long)(((char)(r)|((unsigned long)((char)(g))<<8))|(((unsigned long)(char)(b))<<16)))
@@ -58,9 +59,12 @@ CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {
     // _screen = DefaultScreen(_dis);
     // _gc = create_gc(_dis, win, 0);
     // XSync(display, False);
+    
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
-    //SDL_GetWindowWMInfo(_handle, &wmInfo);
+    LinuxPlatform *platform = dynamic_cast<LinuxPlatform *>(BasePlatform::getPlatform());
+    CCASSERT(platform != nullptr, "Platform pointer can't be null");
+    SDL_GetWindowWMInfo(reinterpret_cast<SDL_Window*>(platform->getWindow()), &wmInfo);
     _dis = wmInfo.info.x11.display;
     _win = wmInfo.info.x11.window;
     XGCValues values;	
@@ -146,8 +150,9 @@ CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::measure
     assert(fs);
     int font_ascent = 0;
     int font_descent = 0;
+    int direction = 0;
     XCharStruct overall;
-    XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), nullptr, &font_ascent, &font_descent, &overall);
+    XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
     return std::array<float, 2>{static_cast<float>(overall.lbearing), 
                                 static_cast<float>(overall.rbearing)};
 }

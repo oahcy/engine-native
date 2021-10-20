@@ -53,7 +53,9 @@ public:
                            int x, int y, int w,
                            int h, int flags) override;
     uintptr_t getWindowHandler() const override;
-
+    struct SDL_Window* getWindow() {
+        return _handle;
+    }
 private:
     void               pollEvent() override;
     void               handleWindowEvent(SDL_WindowEvent& wevent);
