@@ -34,6 +34,8 @@
     #include "platform/mac/MacPlatform.h"
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/IOSPlatform.h"
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    #include "platform/linux/LinuxPlatform.h"
 #endif
 
 namespace cc {
@@ -43,22 +45,17 @@ BasePlatform::~BasePlatform() = default;
 BasePlatform* BasePlatform::getPlatform() {
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     static WindowsPlatform platform;
-    return &platform;
 #elif (CC_PLATFORM == CC_PLATFORM_ANDROID)
     static AndroidPlatform platform;
-    return &platform;
 #elif (CC_PLATFORM == CC_PLATFORM_OHOS)
     static OhosPlatform platform;
-    return &platform;
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     static MacPlatform platform;
-    return &platform;
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     static IOSPlatform platform;
-    return &platform;
-#else
-    //TODO add linux support
-    return nullptr;
+#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
+    static LinuxPlatform platform;
 #endif
+    return &platform;
 }
 } // namespace cc

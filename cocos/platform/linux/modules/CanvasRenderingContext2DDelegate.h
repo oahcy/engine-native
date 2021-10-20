@@ -31,10 +31,14 @@
 #include <cstdint>
 #include <regex>
 #include "base/csscolorparser.h"
-#include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_platform.h"
 #include "math/Math.h"
 #include "platform/FileUtils.h"
+
+/* include the X library headers */
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xos.h>
 
 namespace cc {
 
@@ -74,6 +78,45 @@ public:
     void            fillImageData(const Data &imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) override;
     void            strokeText(const std::string &text, float /*x*/, float /*y*/, float /*maxWidth*/) override;
     void            rect(float x, float y, float w, float h) override;
+
+private:
+    static wchar_t *     utf8ToUtf16(const std::string &str, int *pRetLen = nullptr);
+    void                 removeCustomFont();
+    int                  drawText(const std::string &text, int x, int y);
+    Size                 sizeWithText(const wchar_t *pszText, int nLen);
+    void                 prepareBitmap(int nWidth, int nHeight);
+    void                 deleteBitmap();
+    void                 fillTextureData();
+    std::array<float, 2> convertDrawPoint(Point point, const std::string &text);
+
+public:
+    Display *_dis{nullptr};
+    int _screen{0};
+    Window _win;
+    GC _gc;
+    
+private:
+    int32_t _x;
+    int32_t _y;
+    int _lineCap;
+    int _lineJoin;
+private:
+
+
+    cc::Data    _imageData;
+    std::string _curFontPath;
+    int         _savedDC{0};
+    float       _lineWidth{0.0F};
+    float       _bufferWidth{0.0F};
+    float       _bufferHeight{0.0F};
+
+    std::string        _fontName;
+    int                _fontSize;
+    Size               _textSize;
+    CanvasTextAlign    _textAlign;
+    CanvasTextBaseline _textBaseLine;
+    Color4F            _fillStyle;
+    Color4F            _strokeStyle;
 };
 
 } // namespace cc

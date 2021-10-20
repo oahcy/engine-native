@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "Accelerometer.h"
+#include "platform/linux/modules/Accelerometer.h"
 
 namespace cc {
 void Accelerometer::setAccelerometerEnabled(bool isEnabled) {

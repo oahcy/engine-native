@@ -39,6 +39,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <iostream>
 
 #ifdef MINIZIP_FROM_SYSTEM
     #include <minizip/unzip.h>
@@ -774,9 +775,11 @@ std::string FileUtils::getFullPathForDirectoryAndFilename(const std::string &dir
 
 bool FileUtils::isFileExist(const std::string &filename) const {
     if (isAbsolutePath(filename)) {
+        std::cout << "wwwwwwwwwwwwww           " << normalizePath(filename) << std::endl;
         return isFileExistInternal(normalizePath(filename));
     }
     std::string fullpath = fullPathForFilename(filename);
+    std::cout << "qqqqqqqqqqqqq           " << fullpath << std::endl;
     return !fullpath.empty();
 }
 

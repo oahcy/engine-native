@@ -25,43 +25,41 @@
 
 #pragma once
 
-#include "platform/interfaces/modules/ISystem.h"
+#include "platform/UniversalPlatform.h"
+#include "platform/linux/modules/SystemWindow.h"
+
+struct SDL_WindowEvent;
+struct SDL_Window;
 
 namespace cc {
 
-class System : public ISystem {
+class LinuxPlatform : public UniversalPlatform,
+                      public SystemWindow::Delegate {
 public:
+    LinuxPlatform();
     /**
-     @brief Get target system type.
+     * Destructor of WindowPlatform.
      */
-    OSType getOSType() const override;
+    ~LinuxPlatform() override;
     /**
-     @brief Get target device model.
+     * Implementation of Windows platform initialization.
      */
-    std::string getDeviceModel() const override;
-    /**
-     @brief Get current language config.
-     @return Current language config.
-     */
-    LanguageType getCurrentLanguage() const override;
-    /**
-     @brief Get current language iso 639-1 code.
-     @return Current language iso 639-1 code.
-     */
-    std::string getCurrentLanguageCode() const override;
-    /**
-     @brief Get system version.
-     @return system version.
-     */
-    std::string getSystemVersion() const override;
-    /**
-     @brief Open url in default browser.
-     @param String with url to open.
-     @return True if the resource located by the URL was successfully opened; otherwise false.
-     */
-    bool openURL(const std::string& url) override;
+    int32_t init() override;
+
+    int32_t loop() override;
+
+    // override from SystemWindow::Delegate
+    bool      createWindow(const char* title,
+                           int x, int y, int w,
+                           int h, int flags) override;
+    uintptr_t getWindowHandler() const override;
+
 private:
-    LanguageType getLanguageTypeByISO2(const char* code) const;
+    void               pollEvent() override;
+    void               handleWindowEvent(SDL_WindowEvent& wevent);
+    bool               _inited{false};
+    bool               _quit{false};
+    struct SDL_Window* _handle{nullptr};
 };
 
 } // namespace cc

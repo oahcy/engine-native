@@ -26,10 +26,17 @@
 #include "platform/linux/modules/SystemWindow.h"
 
 #include "base/Log.h"
+#include "base/Macros.h"
+
 // SDL headers
 #include <functional>
 #include "bindings/event/EventDispatcher.h"
 #include "platform/IEventDispatch.h"
+#include "platform/linux/LinuxPlatform.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_main.h"
+#include "SDL2/SDL_syswm.h"
+
 
 namespace {
 
@@ -46,14 +53,24 @@ bool SystemWindow::createWindow(const char *title,
                                 int x, int y, int w,
                                 int h, int flags) {
     // Create window
+
+    LinuxPlatform *platform = dynamic_cast<LinuxPlatform *>(BasePlatform::getPlatform());
+    CCASSERT(platform != nullptr, "Platform pointer can't be null");
+    platform->createWindow(title, x, y, w, h, flags);
+    _width  = w;
+    _height = h;
     return true;
 }
 
 uintptr_t SystemWindow::getWindowHandler() const {
-    return 0;
+    //return _handle;
+    LinuxPlatform *platform = dynamic_cast<LinuxPlatform *>(BasePlatform::getPlatform());
+    CCASSERT(platform != nullptr, "Platform pointer can't be null");
+    return platform->getWindowHandler();
 }
 
 void SystemWindow::setCursorEnabled(bool value) {
+    SDL_SetRelativeMouseMode(value ? SDL_FALSE : SDL_TRUE);
 }
 
 void SystemWindow::copyTextToClipboard(const std::string &text) {

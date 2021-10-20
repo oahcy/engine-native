@@ -75,6 +75,7 @@ void UniversalPlatform::setHandleDefaultEventCallback(HandleEventCallback cb) {
 }
 
 int32_t UniversalPlatform::init() {
+    std::cout << "qqqqqqqqqqqqqqqqq" << std::endl;
     registerInterface(ISystemWindow::createSystemWindowInterface());
     registerInterface(ISystem::createSystemInterface());
     registerInterface(INetwork::createNetworkInterface());

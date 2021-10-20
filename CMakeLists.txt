@@ -349,6 +349,10 @@ if(WINDOWS)
     cocos_source_files(
         cocos/main/main-win32.cpp
     )
+elseif(LINUX)
+    cocos_source_files(
+        cocos/main/main-linux.cpp
+    )
 elseif(MACOSX)
     cocos_source_files(
         cocos/main/main-mac.mm
@@ -371,6 +375,11 @@ if(WINDOWS)
     cocos_source_files(
         cocos/platform/win32/WindowsPlatform.cpp
         cocos/platform/win32/WindowsPlatform.h
+    )
+elseif(LINUX)
+    cocos_source_files(
+        cocos/platform/linux/LinuxPlatform.cpp
+        cocos/platform/linux/LinuxPlatform.h
     )
 elseif(ANDROID)
     cocos_source_files(
@@ -2381,6 +2390,7 @@ endif()
 
 if(LINUX)
     target_link_libraries(cocos2d PUBLIC
+        X11
         ${CC_EXTERNAL_LIBS}
     )
 endif()
