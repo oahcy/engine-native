@@ -37,8 +37,8 @@
 
 /* include the X library headers */
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <X11/Xos.h>
+#include <X11/Xutil.h>
 
 namespace cc {
 
@@ -90,19 +90,20 @@ private:
     std::array<float, 2> convertDrawPoint(Point point, const std::string &text);
 
 public:
-    Display *_dis{nullptr};
-    int _screen{0};
-    Window _win;
-    GC _gc;
-    
+    Display *    _dis{nullptr};
+    int          _screen{0};
+    Drawable     _win{0};
+    Drawable     _pixmap{0};
+    XFontStruct *_font{0};
+    GC           _gc;
+
 private:
     int32_t _x;
     int32_t _y;
-    int _lineCap;
-    int _lineJoin;
+    int     _lineCap;
+    int     _lineJoin;
+
 private:
-
-
     cc::Data    _imageData;
     std::string _curFontPath;
     int         _savedDC{0};
@@ -115,8 +116,8 @@ private:
     Size               _textSize;
     CanvasTextAlign    _textAlign;
     CanvasTextBaseline _textBaseLine;
-    Color4F            _fillStyle;
-    Color4F            _strokeStyle;
+    unsigned long      _fillStyle;
+    unsigned long      _strokeStyle;
 };
 
 } // namespace cc

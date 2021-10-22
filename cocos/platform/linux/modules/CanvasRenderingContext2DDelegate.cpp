@@ -29,8 +29,9 @@
 #include "platform/linux/LinuxPlatform.h"
 
 namespace {
-#define RGB(r,g,b)          ((unsigned long)(((char)(r)|((unsigned long)((char)(g))<<8))|(((unsigned long)(char)(b))<<16)))
-}
+#define RGB(r, g, b)     (int)((int)r | (((int)g) << 8) | (((int)b) << 16))
+#define RGBA(r, g, b, a) (int)((int)r | (((int)g) << 8) | (((int)b) << 16) | (((int)a) << 24))
+} // namespace
 
 namespace {
 void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -53,28 +54,24 @@ void fillRectWithColor(uint8_t *buf, uint32_t totalWidth, uint32_t totalHeight, 
 } // namespace
 
 namespace cc {
+//static const char gdefaultFontName[] = "-*-helvetica-medium-o-*-*-24-*-*-*-*-*-iso8859-*";
+//static const char gdefaultFontName[] = "lucidasanstypewriter-bold-24";
+static const char gdefaultFontName[]  = "lucidasans-24";
+static const char gdefaultFontName1[] = "lucidasans";
+
 CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {
-    // char *display_name = getenv("DISPLAY");  /* address of the X display.      */
-    // _dis = XOpenDisplay(display_name);
-    // _screen = DefaultScreen(_dis);
-    // _gc = create_gc(_dis, win, 0);
-    // XSync(display, False);
-    
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
     LinuxPlatform *platform = dynamic_cast<LinuxPlatform *>(BasePlatform::getPlatform());
     CCASSERT(platform != nullptr, "Platform pointer can't be null");
-    SDL_GetWindowWMInfo(reinterpret_cast<SDL_Window*>(platform->getWindow()), &wmInfo);
+    SDL_GetWindowWMInfo(reinterpret_cast<SDL_Window *>(platform->getWindow()), &wmInfo);
     _dis = wmInfo.info.x11.display;
     _win = wmInfo.info.x11.window;
-    XGCValues values;	
-    _gc = XCreateGC(_dis, _win, 0, &values);
 }
 
 CanvasRenderingContext2DDelegate::~CanvasRenderingContext2DDelegate() {
-    /* flush all pending requests to the X server. */
-    //XFlush(display);
-    //XCloseDisplay(display);
+    XFreePixmap(_dis, _pixmap);
+    XFreeGC(_dis, _gc);
 }
 
 void CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {
@@ -83,12 +80,27 @@ void CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {
     if (_bufferWidth < 1.0F || _bufferHeight < 1.0F) {
         return;
     }
+    auto  textureSize = static_cast<int>(_bufferWidth * _bufferHeight * 4);
+    auto *data        = static_cast<int8_t *>(malloc(sizeof(int8_t) * textureSize));
+    memset(data, 0x00, textureSize);
+    _imageData.fastSet((uint8_t *)data, textureSize);
+
+    if (_pixmap) {
+        XFreePixmap(_dis, _pixmap);
+        _pixmap = 0;
+    }
+    if (!_win) {
+        return;
+    }
+    //Screen *scr = DefaultScreenOfDisplay(_dis);
+    _pixmap = XCreatePixmap(_dis, _win, w, h, 32);
+    _gc     = XCreateGC(_dis, _pixmap, 0, 0);
 }
 
 void CanvasRenderingContext2DDelegate::beginPath() {
     // called: set_lineWidth() -> beginPath() -> moveTo() -> lineTo() -> stroke(), when draw line
-    XSetLineAttributes(_dis, _gc, static_cast<int>(_lineWidth), LineSolid, _lineCap,_lineJoin);
-    XSetForeground(_dis,_gc, RGB(255, 255, 255));
+    XSetLineAttributes(_dis, _gc, static_cast<int>(_lineWidth), LineSolid, _lineCap, _lineJoin);
+    XSetForeground(_dis, _gc, RGB(255, 255, 255));
 }
 
 void CanvasRenderingContext2DDelegate::closePath() {
@@ -102,7 +114,7 @@ void CanvasRenderingContext2DDelegate::moveTo(float x, float y) {
 
 void CanvasRenderingContext2DDelegate::lineTo(float x, float y) {
     //LineTo(_DC,  static_cast<int>(x),  static_cast<int>(-(y - _bufferHeight - _fontSize)));
-    XDrawLine(_dis, _win, _gc, _x, _y, x, y);
+    XDrawLine(_dis, _pixmap, _gc, _x, _y, x, y);
 }
 
 void CanvasRenderingContext2DDelegate::stroke() {
@@ -119,22 +131,40 @@ void CanvasRenderingContext2DDelegate::clearRect(float x, float y, float w, floa
         return;
     }
 
-    XClearArea(_dis, _win, x, y, w, h, False);
+    if (_imageData.isNull()) {
+        return;
+    }
+
+    recreateBuffer(w, h);
 }
 
 void CanvasRenderingContext2DDelegate::fillRect(float x, float y, float w, float h) {
     if (_bufferWidth < 1.0F || _bufferHeight < 1.0F) {
         return;
     }
-    XFillRectangle(_dis, _win, _gc, x, y, w, h);
+
+    XSetForeground(_dis, _gc, _fillStyle);
+    XFillRectangle(_dis, _pixmap, _gc, x, y, w, h);
 }
 
 void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x, float y, float /*maxWidth*/) {
     if (text.empty() || _bufferWidth < 1.0F || _bufferHeight < 1.0F) {
         return;
     }
-    XTextItem item{ const_cast<char*>(text.c_str()), static_cast<int>(text.length()), 0, None};
-    XDrawText(_dis, _win, _gc, x, y, &item, 1);
+
+    Point offsetPoint = convertDrawPoint(Point{x, y}, text);
+    XSetForeground(_dis, _gc, 0xff000000 | _fillStyle);
+    XSetFont(_dis, _gc, _font->fid);
+    XDrawString(_dis, _pixmap, _gc, offsetPoint[0], offsetPoint[1], text.c_str(), (int)(text.length()));
+    XImage *       image  = XGetImage(_dis, _pixmap, 0, 0, _bufferWidth, _bufferHeight, AllPlanes, ZPixmap);
+    int            width  = image->width;
+    int            height = image->height;
+    unsigned char *data   = _imageData.getBytes();
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; x++) {
+            *(((int *)data + (y * width) + x)) = static_cast<int>(XGetPixel(image, x, y));
+        }
+    }
 }
 
 void CanvasRenderingContext2DDelegate::strokeText(const std::string &text, float /*x*/, float /*y*/, float /*maxWidth*/) const {
@@ -146,59 +176,66 @@ void CanvasRenderingContext2DDelegate::strokeText(const std::string &text, float
 CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::measureText(const std::string &text) {
     if (text.empty())
         return std::array<float, 2>{0.0f, 0.0f};
-    XFontStruct *fs = XLoadQueryFont(_dis, "cursor");
-    assert(fs);
-    int font_ascent = 0;
-    int font_descent = 0;
-    int direction = 0;
+    int         font_ascent  = 0;
+    int         font_descent = 0;
+    int         direction    = 0;
     XCharStruct overall;
-    XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
-    return std::array<float, 2>{static_cast<float>(overall.lbearing), 
-                                static_cast<float>(overall.rbearing)};
+    XQueryTextExtents(_dis, _font->fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
+    return std::array<float, 2>{static_cast<float>(overall.width),
+                                static_cast<float>(overall.ascent + overall.descent)};
 }
 
 void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName,
                                                   float              fontSize,
                                                   bool               bold,
-                                                  bool /* italic */,
-                                                  bool /* oblique */,
+                                                  bool               italic,
+                                                  bool               oblique,
                                                   bool /* smallCaps */) {
     do {
         _fontName = fontName;
         _fontSize = static_cast<int>(fontSize);
-        std::string fontPath;
-        if (!_fontName.empty()) {
-            // firstly, try to create font from ttf file
-            const auto &fontInfoMap = getFontFamilyNameMap();
-            auto        iter        = fontInfoMap.find(_fontName);
-            if (iter != fontInfoMap.end()) {
-                fontPath                = iter->second;
-                std::string tmpFontPath = fontPath;
-                size_t         nFindPos = tmpFontPath.rfind("/");
-                tmpFontPath             = &tmpFontPath[nFindPos + 1];
-                nFindPos                = tmpFontPath.rfind(".");
-                // IDEA: draw ttf failed if font file name not equal font face name
-                // for example: "DejaVuSansMono-Oblique" not equal "DejaVu Sans Mono"  when using DejaVuSansMono-Oblique.ttf
-                _fontName = tmpFontPath.substr(0, nFindPos);
-            } else {
-                auto nFindPos = fontName.rfind("/");
-                if (nFindPos != fontName.npos) {
-                    if (fontName.length() == nFindPos + 1) {
-                        _fontName = "";
-                    } else {
-                        _fontName = &_fontName[nFindPos + 1];
-                    }
+        /// TODO(bug):Remove default settings
+        std::string fontName   = "helvetica"; // default
+        char        serv[1024] = {0};
+        std::string slant      = "";
+        if (italic) {
+            slant = "*I";
+        } else if (oblique) {
+            slant = "*o";
+        }
+        // *name-bold*Italic(Oblique)*size
+        snprintf(serv, sizeof(serv) - 1, "*%s%s%s*--%d*", fontName.c_str(),
+                 bold ? "*Bold" : "",
+                 slant.c_str(),
+                 _fontSize);
+        if (_font) {
+            XFreeFont(_dis, _font);
+            _font = 0;
+        }
+
+        _font = XLoadQueryFont(_dis, serv);
+        if (!_font) {
+            static int fontSizes[] = {8, 10, 12, 14, 18, 24};
+            int        i           = 0;
+            int        size        = sizeof(fontSizes) / sizeof(fontSizes[0]);
+            for (i = 0; i < size; ++i) {
+                if (_fontSize < fontSizes[i]) {
+                    break;
                 }
             }
-            //tFont.lfCharSet = DEFAULT_CHARSET;
-            //strcpy_s(tFont.lfFaceName, LF_FACESIZE, _fontName.c_str());
+            if (i == 0) {
+                _fontSize = fontSizes[0];
+            } else if (i > 1 && i < size) {
+                _fontSize = fontSizes[i - 1];
+            } else {
+                _fontSize = fontSizes[size - 1];
+            }
+            snprintf(serv, sizeof(serv) - 1, "*%s*%d*", "lucidasans", _fontSize);
+            _font = XLoadQueryFont(_dis, serv);
+            if (!_font) {
+                _font = XLoadQueryFont(_dis, serv);
+            }
         }
-        XFontStruct *font = XLoadQueryFont(_dis, _fontName.c_str());
-        /* If the font could not be loaded, revert to the "fixed" font. */
-        if (!font) {
-            font = XLoadQueryFont(_dis, "fixed");
-        }
-        XSetFont(_dis, _gc, font->fid);
     } while (false);
 }
 
@@ -211,11 +248,11 @@ void CanvasRenderingContext2DDelegate::setTextBaseline(CanvasTextBaseline baseli
 }
 
 void CanvasRenderingContext2DDelegate::setFillStyle(float r, float g, float b, float a) {
-    _fillStyle = {r, g, b, a};
+    _fillStyle = RGBA(r * 255, g * 255, b * 255, a * 255);
 }
 
 void CanvasRenderingContext2DDelegate::setStrokeStyle(float r, float g, float b, float a) {
-    _strokeStyle = {r, g, b, a};
+    _strokeStyle = RGBA(r * 255, g * 255, b * 255, a * 255);
 }
 
 void CanvasRenderingContext2DDelegate::setLineWidth(float lineWidth) {
@@ -223,11 +260,7 @@ void CanvasRenderingContext2DDelegate::setLineWidth(float lineWidth) {
 }
 
 const cc::Data &CanvasRenderingContext2DDelegate::getDataRef() const {
-    static cc::Data data;
-    int size = 0;
-    unsigned char* buf = reinterpret_cast<unsigned char*>(XFetchBuffer(_dis, &size, 0));
-    data.copy(static_cast<const unsigned char*>(buf), size);
-    return data;
+    return _imageData;
 }
 
 void CanvasRenderingContext2DDelegate::removeCustomFont() {
@@ -236,8 +269,8 @@ void CanvasRenderingContext2DDelegate::removeCustomFont() {
 
 // x, y offset value
 int CanvasRenderingContext2DDelegate::drawText(const std::string &text, int x, int y) {
-    XTextItem item{  const_cast<char*>(text.c_str()), static_cast<int>(text.length()), 0, None};
-    return XDrawText(_dis, _win, _gc, x, y, &item, 1);
+    XTextItem item{const_cast<char *>(text.c_str()), static_cast<int>(text.length()), 0, None};
+    return XDrawText(_dis, _pixmap, _gc, x, y, &item, 1);
 }
 
 CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::sizeWithText(const wchar_t *pszText, int nLen) {
@@ -249,34 +282,55 @@ CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::sizeWit
     // int font_descent = 0;
     // XCharStruct overall;
     // XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), nullptr, &font_ascent, &font_descent, &overall);
-    // return std::array<float, 2>{static_cast<float>(overall.lbearing), 
+    // return std::array<float, 2>{static_cast<float>(overall.lbearing),
     //                             static_cast<float>(overall.rbearing)};
-    return std::array<float, 2>{0.0F,0.0F};
+    return std::array<float, 2>{0.0F, 0.0F};
 }
 
 void CanvasRenderingContext2DDelegate::prepareBitmap(int nWidth, int nHeight) {
-
 }
 
 void CanvasRenderingContext2DDelegate::deleteBitmap() {
-
 }
 
 void CanvasRenderingContext2DDelegate::fillTextureData() {
 }
 
 std::array<float, 2> CanvasRenderingContext2DDelegate::convertDrawPoint(Point point, const std::string &text) {
-    return std::array<float, 2>{0,0};
+    int         font_ascent  = 0;
+    int         font_descent = 0;
+    int         direction    = 0;
+    XCharStruct overall;
+    XQueryTextExtents(_dis, _font->fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
+    int width = overall.width;
+    if (_textAlign == CanvasTextAlign::CENTER) {
+        point[0] -= width / 2.0f;
+    } else if (_textAlign == CanvasTextAlign::RIGHT) {
+        point[0] -= width;
+    }
+
+    if (_textBaseLine == CanvasTextBaseline::TOP) {
+        point[1] += overall.ascent;
+    } else if (_textBaseLine == CanvasTextBaseline::MIDDLE) {
+        point[1] += (overall.descent - overall.ascent) / 2 - overall.descent;
+    } else if (_textBaseLine == CanvasTextBaseline::BOTTOM) {
+        point[1] += -overall.descent;
+    } else if (_textBaseLine == CanvasTextBaseline::ALPHABETIC) {
+        //point[1] -= overall.ascent;
+        // X11 The default way of drawing text
+    }
+
+    return point;
 }
 
 void CanvasRenderingContext2DDelegate::fill() {
 }
 
-void CanvasRenderingContext2DDelegate::setLineCap(const std::string & lineCap ) {
+void CanvasRenderingContext2DDelegate::setLineCap(const std::string &lineCap) {
     _lineCap = LineSolid;
 }
 
-void CanvasRenderingContext2DDelegate::setLineJoin(const std::string & lineJoin ) {
+void CanvasRenderingContext2DDelegate::setLineJoin(const std::string &lineJoin) {
     _lineJoin = JoinRound;
 }
 

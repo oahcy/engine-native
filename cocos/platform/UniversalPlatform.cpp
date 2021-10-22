@@ -75,7 +75,6 @@ void UniversalPlatform::setHandleDefaultEventCallback(HandleEventCallback cb) {
 }
 
 int32_t UniversalPlatform::init() {
-    std::cout << "qqqqqqqqqqqqqqqqq" << std::endl;
     registerInterface(ISystemWindow::createSystemWindowInterface());
     registerInterface(ISystem::createSystemInterface());
     registerInterface(INetwork::createNetworkInterface());
@@ -87,7 +86,7 @@ int32_t UniversalPlatform::init() {
 }
 
 int32_t UniversalPlatform::run(int argc, const char** argv) {
-    if(cocos_main(argc, argv) != 0){
+    if (cocos_main(argc, argv) != 0) {
         return -1;
     }
     return loop();
