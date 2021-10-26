@@ -376,7 +376,7 @@ if(WINDOWS)
         cocos/platform/win32/WindowsPlatform.cpp
         cocos/platform/win32/WindowsPlatform.h
     )
-elseif(LINUX)
+elseif(LINUX AND (NOT QNX))
     cocos_source_files(
         cocos/platform/linux/LinuxPlatform.cpp
         cocos/platform/linux/LinuxPlatform.h
@@ -462,7 +462,7 @@ elseif(MACOSX OR IOS)
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.mm
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.h
     )
-elseif(LINUX)
+elseif(LINUX AND (NOT QNX))
     cocos_source_files(
         cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.cpp
         cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.h
@@ -553,7 +553,7 @@ elseif(IOS)
         cocos/platform/ios/modules/SystemWindow.mm
         cocos/platform/ios/modules/SystemWindow.h
    )
-elseif(LINUX)
+elseif(LINUX AND (NOT QNX))
     cocos_source_files(
         cocos/platform/linux/modules/Accelerometer.cpp
         cocos/platform/linux/modules/Accelerometer.h

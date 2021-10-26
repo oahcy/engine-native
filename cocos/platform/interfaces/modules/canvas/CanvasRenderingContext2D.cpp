@@ -23,6 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#if !defined(__QNX__)
 #include "platform/interfaces/modules/canvas/CanvasRenderingContext2D.h"
 
 #include <array>
@@ -445,3 +446,4 @@ void CanvasRenderingContext2D::recreateBufferIfNeeded() {
 }
 
 } // namespace cc
+#endif

@@ -28,6 +28,7 @@
 #include <string>
 #include <vector>
 #include<stdarg.h>
+#include <time.h>
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     #ifndef WIN32_LEAN_AND_MEAN

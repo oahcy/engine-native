@@ -28,6 +28,7 @@
 #include "Macros.h"
 #include "TypeDef.h"
 #include "memory/Memory.h"
+#include <stdarg.h>
 
 namespace cc {
 
