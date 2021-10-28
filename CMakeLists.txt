@@ -2365,7 +2365,6 @@ if(APPLE)
         )
     elseif(IOS)
         target_link_libraries(cocos2d PUBLIC
-            "-all_load"
             "-framework QuartzCore"
             "-framework MetalPerformanceShaders"
             "-framework UIKit"
