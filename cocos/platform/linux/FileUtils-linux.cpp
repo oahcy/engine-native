@@ -41,7 +41,7 @@ bool FileUtilsLinux::init() {
     // Set writable path to $XDG_CONFIG_HOME or ~/.config/<app name>/ if $XDG_CONFIG_HOME not exists.
     const char *xdg_config_path = getenv("XDG_CONFIG_HOME");
     std::string xdgConfigPath;
-    if (xdg_config_path == NULL) {
+    if (xdg_config_path == nullptr) {
         xdgConfigPath = getenv("HOME");
         xdgConfigPath.append("/.config");
     } else {
