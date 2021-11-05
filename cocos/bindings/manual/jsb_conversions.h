@@ -150,7 +150,7 @@ struct InputAssemblerInfo;
     #define CC_CONSTEXPR     constexpr
 #else
     #define CC_CONSTEXPR
-    #define CC_STATIC_ASSERT(cond, msg) assert(cond)
+    #define CC_STATIC_ASSERT(cond, args...) assert(cond)
 #endif
 
 #if __clang__ && (__cplusplus > 201402L)
