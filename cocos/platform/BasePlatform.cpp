@@ -54,8 +54,8 @@ BasePlatform* BasePlatform::getPlatform() {
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     static IOSPlatform platform;
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    static LinuxPlatform platform;
+    //static LinuxPlatform platform;
 #endif
-    return &platform;
+    return nullptr;
 }
 } // namespace cc

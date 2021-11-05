@@ -35,10 +35,17 @@
 #include "math/Math.h"
 #include "platform/FileUtils.h"
 
+#if !defined(__QNX__)
 /* include the X library headers */
 #include <X11/Xlib.h>
 #include <X11/Xos.h>
 #include <X11/Xutil.h>
+#else
+#define Display void*
+#define Drawable void*
+#define XFontStruct void*
+#define GC void*
+#endif
 
 namespace cc {
 

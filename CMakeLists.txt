@@ -462,7 +462,12 @@ elseif(MACOSX OR IOS)
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.mm
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.h
     )
-elseif(LINUX AND (NOT QNX))
+elseif(QNX)
+    cocos_source_files(
+        cocos/platform/qnx/modules/CanvasRenderingContext2DDelegate.cpp
+        cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.h
+    )
+elseif(LINUX)
     cocos_source_files(
         cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.cpp
         cocos/platform/linux/modules/CanvasRenderingContext2DDelegate.h
@@ -2388,7 +2393,13 @@ if(APPLE)
 
 endif()
 
-if(LINUX)
+if(QNX)
+    target_link_libraries(cocos2d PUBLIC
+        socket
+        ssl
+        ${CC_EXTERNAL_LIBS}
+    )
+elseif(LINUX)
     target_link_libraries(cocos2d PUBLIC
         X11
         ${CC_EXTERNAL_LIBS}
