@@ -1,4 +1,6 @@
 /****************************************************************************
+ Copyright (c) 2010-2013 cocos2d-x.org
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
  Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
@@ -23,27 +25,17 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
-
+#include "platform/FileUtils.h"
 namespace cc {
+class FileUtilsQNX : public FileUtils {
+    friend class FileUtils;
+    bool        isFileExistInternal(const std::string &filename) const override;
+    std::string getWritablePath() const override;
+    bool        init() override;
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
-}
-
+private:
+    std::string _writablePath;
+};
 } // namespace cc

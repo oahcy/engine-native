@@ -23,27 +23,49 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
-
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include "platform/linux/modules/Screen.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "base/Macros.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
+int Screen::getDPI() const {
+    static int dpi = -1;
+    if (dpi == -1) {    
+        //screen_get_window_property_iv(screen_win, SCREEN_PROPERTY_DPI, &dpi);
+    }
+    return dpi;
+}
+
+float Screen::getDevicePixelRatio() const {
+    return 1;
+}
+
+void Screen::setKeepScreenOn(bool value) {
+    CC_UNUSED_PARAM(value);
+}
+
+Screen::Orientation Screen::getDeviceOrientation() const {
+    return Orientation::PORTRAIT;
+}
+
+Vec4 Screen::getSafeAreaEdge() const {
+    return cc::Vec4();
+}
+
+bool Screen::isDisplayStats() {
+    se::AutoHandleScope hs;
+    se::Value           ret;
+    char                commandBuf[100] = "cc.profiler.isShowingStats();";
+    se::ScriptEngine::getInstance()->evalString(commandBuf, 100, &ret);
+    return ret.toBoolean();
+}
+
+void Screen::setDisplayStats(bool isShow) {
+    se::AutoHandleScope hs;
+    char                commandBuf[100] = {0};
+    sprintf(commandBuf, isShow ? "cc.profiler.showStats();" : "cc.profiler.hideStats();");
+    se::ScriptEngine::getInstance()->evalString(commandBuf);
 }
 
 } // namespace cc

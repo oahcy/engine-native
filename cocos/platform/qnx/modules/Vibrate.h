@@ -23,27 +23,22 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include "platform/interfaces/modules/IVibrator.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
-}
+class Vibrator : public IVibrator {
+public:
+    /**
+     * Vibrator for the specified amount of time.
+     * If Vibrator is not supported, then invoking this method has no effect.
+     * Some platforms limit to a maximum duration of 5 seconds.
+     * Duration is ignored on iOS due to API limitations.
+     * @param duration The duration in seconds.
+     */
+    void vibrate(float duration) override;
+};
 
 } // namespace cc

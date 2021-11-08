@@ -22,28 +22,11 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+#include <iostream>
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#include "platform/BasePlatform.h"
+#include "SDL2/SDL_main.h"
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
-
-namespace cc {
-
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
+int main(int argc, char** argv) {
+    START_PLATFORM(argc, (const char**)argv);
 }
-
-} // namespace cc

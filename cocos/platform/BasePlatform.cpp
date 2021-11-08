@@ -36,6 +36,8 @@
     #include "platform/ios/IOSPlatform.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/LinuxPlatform.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/QnxPlatform.h"
 #endif
 
 namespace cc {
@@ -54,8 +56,10 @@ BasePlatform* BasePlatform::getPlatform() {
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     static IOSPlatform platform;
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    //static LinuxPlatform platform;
+    static LinuxPlatform platform;
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    static QNXPlatform platform;
 #endif
-    return nullptr;
+    return &platform;
 }
 } // namespace cc

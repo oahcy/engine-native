@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/linux/LinuxPlatform.h"
+#include "platform/qnx/QNXPlatform.h"
 
 #include <sys/time.h>
 #include <unistd.h>
@@ -31,9 +31,11 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_main.h"
 #include "SDL2/SDL_syswm.h"
+#include "SDL2/SDL_sysvideo.h"
 
 #include "platform/interfaces/OSInterface.h"
 #include "platform/interfaces/modules/ISystemWindow.h"
+
 
 namespace {
 
@@ -150,18 +152,24 @@ int windowFlagsToSDLWindowFlag(int flags) {
 } // namespace
 
 namespace cc {
-LinuxPlatform::LinuxPlatform() = default;
-LinuxPlatform::~LinuxPlatform() {
-    if (_handle) {
-        SDL_DestroyWindow(_handle);
-        _handle = nullptr;
+QNXPlatform::QNXPlatform() = default;
+QNXPlatform::~QNXPlatform() {
+    // if (_handle) {
+    //     SDL_DestroyWindow(_handle);
+    //     _handle = nullptr;
+    // }
+    // if (_inited) {
+    //     SDL_Quit();
+    // }
+    if(_screenWin) {
+        screen_destroy_window(_screenWin);
     }
-    if (_inited) {
-        SDL_Quit();
+    if(_screenCtx) {
+        screen_destroy_context(_screenCtx);
     }
 }
 
-int32_t LinuxPlatform::init() {
+int32_t QNXPlatform::init() {
     UniversalPlatform::init();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -181,7 +189,7 @@ static long getCurrentMillSecond() {
     return lLastTime;
 }
 
-int32_t LinuxPlatform::loop() {
+int32_t QNXPlatform::loop() {
     long lastTime        = 0L;
     long curTime         = 0L;
     long desiredInterval = 0L;
@@ -190,12 +198,13 @@ int32_t LinuxPlatform::loop() {
     while (!_quit) {
         curTime         = getCurrentMillSecond();
         desiredInterval = (long)(1.0 / getFps());
-        pollEvent();
+
+        //pollEvent();
         actualInterval = curTime - lastTime;
         if (actualInterval >= desiredInterval) {
             lastTime = getCurrentMillSecond();
             runTask();
-            SDL_GL_SwapWindow(_handle);
+            //SDL_GL_SwapWindow(_handle);
         } else {
             usleep((desiredInterval - curTime + lastTime) * 1000);
         }
@@ -205,7 +214,7 @@ int32_t LinuxPlatform::loop() {
     return 0;
 }
 
-void LinuxPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
+void QNXPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
     WindowEvent ev;
     switch (wevent.event) {
         case SDL_WINDOWEVENT_SHOWN: {
@@ -254,7 +263,7 @@ void LinuxPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
     }
 }
 
-void LinuxPlatform::pollEvent() {
+void QNXPlatform::pollEvent() {
     SDL_Event sdlEvent;
     int       cnt = SDL_PollEvent(&sdlEvent);
     if (cnt == 0) {
@@ -366,29 +375,59 @@ void LinuxPlatform::pollEvent() {
     }
 }
 
-bool LinuxPlatform::createWindow(const char *title,
-                                 int x, int y, int w,
-                                 int h, int flags) {
+bool QNXPlatform::createWindow(const char *title,
+                               int x, int y, int w,
+                               int h, int flags) {
     if (_inited) {
         return true;
     }
-    // Create window
-    int sdlFlags = windowFlagsToSDLWindowFlag(flags);
-    _handle      = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, sdlFlags);
-    if (_handle == nullptr) {
-        // Display error message
-        CC_LOG_ERROR("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-        return false;
+    int rc;
+
+    //Create the screen context
+    rc = screen_create_context(&_screenCtx, SCREEN_APPLICATION_CONTEXT);
+    if (rc) {
+        perror("screen_create_window");
+        return EXIT_FAILURE;
     }
-    _inited = true;
+
+    //Create the screen window that will be render onto
+    rc = screen_create_window(&_screenWin, _screenCtx);
+    if (rc) {
+        perror("screen_create_window");
+        return EXIT_FAILURE;
+    }
+
+    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_FORMAT, (const int[]){ SCREEN_FORMAT_RGBX8888 });
+    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_USAGE, (const int[]){ SCREEN_USAGE_OPENGL_ES2 });
+
+    int size[2] = { w, h };      /* size of the window on screen */
+    rc = screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_SIZE, size);
+
+    int dpi = 0;
+    screen_get_window_property_iv(_screenWin, SCREEN_PROPERTY_DPI, &dpi);
+    fprintf(stdout, "[glError] %d\n", dpi);
+
+    rc = screen_create_window_buffers(_screenWin, 2);
+    if (rc) {
+        perror("screen_create_window_buffers");
+        return EXIT_FAILURE;
+    }
+
+    // // Create window
+    // int sdlFlags = windowFlagsToSDLWindowFlag(flags);
+    // _handle      = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, sdlFlags);
+    // if (_handle == nullptr) {
+    //     // Display error message
+    //     CC_LOG_ERROR("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+    //     return false;
+    // }
+    // _inited = true;
     return true;
 }
 
-uintptr_t LinuxPlatform::getWindowHandler() const {
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
-    SDL_GetWindowWMInfo(_handle, &wmInfo);
-    return reinterpret_cast<uintptr_t>(wmInfo.info.x11.window);
+uintptr_t QNXPlatform::getWindowHandler() const {
+    //int32_t *window = (int32_t *)(_handle->driverdata);
+    return reinterpret_cast<uintptr_t>(_screenWin);
 }
 
 } // namespace cc

@@ -63,6 +63,7 @@ public:
         IPHONE,    /**< iPhone */
         IPAD,      /**< iPad */
         OHOS,      /**< Open Harmony OS> */
+        QNX,       /**< QNX */
     };
     /**
      @brief Get target system type.

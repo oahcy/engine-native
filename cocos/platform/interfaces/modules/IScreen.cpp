@@ -37,6 +37,8 @@
     #include "platform/ios/modules/Screen.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/modules/Screen.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/modules/Screen.h"
 #endif
 
 namespace cc {

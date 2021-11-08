@@ -22,28 +22,12 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-
-#include "platform/interfaces/modules/IAccelerometer.h"
-
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include "platform/linux/modules/Network.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
+INetwork::NetworkType Network::getNetworkType() const {
+    return INetwork::NetworkType::LAN;
 }
 
 } // namespace cc

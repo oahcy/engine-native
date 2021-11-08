@@ -23,27 +23,48 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include "platform/UniversalPlatform.h"
+#include "platform/qnx/modules/SystemWindow.h"
+#include <screen/screen.h>
+struct SDL_WindowEvent;
+struct SDL_Window;
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
-}
+class QNXPlatform : public UniversalPlatform,
+                    public SystemWindow::Delegate {
+public:
+    QNXPlatform();
+    /**
+     * Destructor of WindowPlatform.
+     */
+    ~QNXPlatform() override;
+    /**
+     * Implementation of Windows platform initialization.
+     */
+    int32_t init() override;
+
+    int32_t loop() override;
+
+    // override from SystemWindow::Delegate
+    bool               createWindow(const char* title,
+                                    int x, int y, int w,
+                                    int h, int flags) override;
+    uintptr_t          getWindowHandler() const override;
+    struct SDL_Window* getWindow() {
+        return nullptr;//_handle;
+    }
+
+private:
+    SDL_Window* _handle;
+    void               pollEvent() override;
+    void               handleWindowEvent(SDL_WindowEvent& wevent);
+    bool               _inited{false};
+    bool               _quit{false};
+    screen_context_t _screenCtx;
+    screen_window_t _screenWin;
+};
 
 } // namespace cc

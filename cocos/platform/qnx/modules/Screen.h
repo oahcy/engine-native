@@ -23,27 +23,29 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include "platform/interfaces/modules/IScreen.h"
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
-}
+class Screen : public IScreen {
+public:
+    int         getDPI() const override;
+    float       getDevicePixelRatio() const override;
+    void        setKeepScreenOn(bool value) override;
+    Orientation getDeviceOrientation() const override;
+    Vec4        getSafeAreaEdge() const override;
+    /**
+     @brief Get current display stats.
+     @return bool, is displaying stats or not.
+     */
+    bool isDisplayStats() override;
+
+    /**
+     @brief set display stats information.
+     */
+    void setDisplayStats(bool isShow) override;
+};
 
 } // namespace cc

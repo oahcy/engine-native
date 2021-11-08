@@ -36,13 +36,15 @@
     #include "platform/ios/modules/System.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/modules/System.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/modules/System.h"
 #endif
 
 namespace cc {
 ISystem::~ISystem() = default;
 
 ISystem::Ptr ISystem::createSystemInterface() {
-    return nullptr;
+    return std::make_shared<System>();
 }
 
 std::string ISystem::getCurrentLanguageToString() {

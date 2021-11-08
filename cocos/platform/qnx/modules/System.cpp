@@ -32,11 +32,11 @@ namespace cc {
 using OSType = System::OSType;
 
 OSType System::getOSType() const {
-    return OSType::LINUX;
+    return OSType::QNX;
 }
 
 std::string System::getDeviceModel() const {
-    return "Linux";
+    return "QNX";
 }
 
 System::LanguageType System::getCurrentLanguage() const {
@@ -53,8 +53,8 @@ System::LanguageType System::getCurrentLanguage() const {
 }
 
 std::string System::getCurrentLanguageCode() const {
-    static char code[3]       = {0};
-    char*       pLanguageName = getenv("LANG");
+    static char code[3]={0};
+    char *pLanguageName = getenv("LANG");
     if (!pLanguageName) {
         return "en";
     }
@@ -62,8 +62,8 @@ std::string System::getCurrentLanguageCode() const {
     if (!pLanguageName) {
         return "en";
     }
-    strncpy(code, pLanguageName, 2);
-    code[2] = '\0';
+    strncpy(code,pLanguageName,2);
+    code[2]='\0';
     return code;
 }
 
@@ -74,8 +74,9 @@ std::string System::getSystemVersion() const {
 }
 
 bool System::openURL(const std::string& url) {
-    std::string op = std::string("xdg-open '").append(url).append("'");
-    return system(op.c_str()) == 0;
+    //std::string op = std::string("xdg-open '").append(url).append("'");
+    //return system(op.c_str()) == 0;
+    return false;
 }
 
 System::LanguageType System::getLanguageTypeByISO2(const char* code) const {
@@ -119,7 +120,7 @@ System::LanguageType System::getLanguageTypeByISO2(const char* code) const {
         ret = LanguageType::ROMANIAN;
     } else if (strncmp(code, "bg", 2) == 0) {
         ret = LanguageType::BULGARIAN;
-    }
+    } 
     return ret;
 }
 } // namespace cc

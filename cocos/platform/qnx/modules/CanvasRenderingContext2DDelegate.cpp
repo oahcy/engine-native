@@ -23,8 +23,7 @@
  THE SOFTWARE.                                                                    \
  ****************************************************************************/
 
-#include "platform/linux/modules/CanvasRenderingContext2DDelegate.h"
-#include "platform/linux/LinuxPlatform.h"
+#include "platform/qnx/modules/CanvasRenderingContext2DDelegate.h"
 
 namespace {
 #define RGB(r, g, b)     (int)((int)r | (((int)g) << 8) | (((int)b) << 16))
@@ -58,27 +57,54 @@ static const char gdefaultFontName[]  = "lucidasans-24";
 static const char gdefaultFontName1[] = "lucidasans";
 
 CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {
+   //_surface = cairo_image_surface_create_for_data(pointer , CAIRO_FORMAT_ARGB32,size[0], size[1], stride);
+   //_cr = cairo_create (_surface);
+   
 }
 
 CanvasRenderingContext2DDelegate::~CanvasRenderingContext2DDelegate() {
+    if(_cr != nullptr) {
+        cairo_destroy(_cr);
+    }
+    if(_surface) {
+        cairo_surface_destroy(_surface);
+    }
 }
 
 void CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {
+    _bufferWidth  = w;
+    _bufferHeight = h;
+    if (_bufferWidth < 1.0F || _bufferHeight < 1.0F) {
+        return;
+    }
+    auto  textureSize = static_cast<int>(_bufferWidth * _bufferHeight * 4);
+    auto *data        = static_cast<int8_t *>(malloc(sizeof(int8_t) * textureSize));
+    memset(data, 0x00, textureSize);
+    if(_cr) {
+        cairo_destroy(_cr);
+    }
+    if(_surface) {
+        cairo_surface_destroy(_surface);
+    }
+    _surface = cairo_image_surface_create_for_data((unsigned char*)data, CAIRO_FORMAT_ARGB32, _bufferWidth, _bufferHeight, _bufferWidth * 4);
+    _cr = cairo_create (_surface);
 }
 
 void CanvasRenderingContext2DDelegate::beginPath() {
+
 }
 
 void CanvasRenderingContext2DDelegate::closePath() {
 }
 
 void CanvasRenderingContext2DDelegate::moveTo(float x, float y) {
-    //MoveToEx(_DC, static_cast<int>(x), static_cast<int>(-(y - _bufferHeight - _fontSize)), nullptr);
-    _x = x;
-    _y = y;
+    CCASSERT(_cr != nullptr, "Cr pointer cannot be empty");
+    cairo_move_to (_cr, x, y);
 }
 
 void CanvasRenderingContext2DDelegate::lineTo(float x, float y) {
+    CCASSERT(_cr != nullptr, "Cr pointer cannot be empty");
+    cairo_line_to(_cr, x, y);
 }
 
 void CanvasRenderingContext2DDelegate::stroke() {
@@ -91,18 +117,54 @@ void CanvasRenderingContext2DDelegate::restoreContext() {
 }
 
 void CanvasRenderingContext2DDelegate::clearRect(float x, float y, float w, float h) {
+    if (_bufferWidth < 1.0F || _bufferHeight < 1.0F) {
+        return;
+    }
+
+    if (_imageData.isNull()) {
+        return;
+    }
+
+    recreateBuffer(w, h);
 }
 
 void CanvasRenderingContext2DDelegate::fillRect(float x, float y, float w, float h) {
+    if (_bufferWidth < 1.0F || _bufferHeight < 1.0F) {
+        return;
+    }
+    CCASSERT(_cr != nullptr, "Cr pointer cannot be empty");
+    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
+    cairo_rectangle (_cr, x, y, w, h);
+    cairo_fill (_cr);
+    //XSetForeground(_dis, _gc, _fillStyle);
+    //XFillRectangle(_dis, _pixmap, _gc, x, y, w, h);
 }
 
 void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x, float y, float /*maxWidth*/) {
+    if (text.empty() || _bufferWidth < 1.0F || _bufferHeight < 1.0F) {
+        return;
+    }
+
+    Point offsetPoint = convertDrawPoint(Point{x, y}, text);
+    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
+    //XSetFont(_dis, _gc, _font->fid);
+    cairo_move_to (_cr, x, y);
+    cairo_show_text(_cr, text.c_str());
 }
 
 void CanvasRenderingContext2DDelegate::strokeText(const std::string &text, float /*x*/, float /*y*/, float /*maxWidth*/) const {
+    if (text.empty() || _bufferWidth < 1.0F || _bufferHeight < 1.0F) {
+        return;
+    }
 }
 
 CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::measureText(const std::string &text) {
+    if (text.empty())
+        return std::array<float, 2>{0.0f, 0.0f};
+    cairo_text_extents_t extents;
+    cairo_text_extents(_cr, text.c_str(), &extents);
+    return std::array<float, 2>{static_cast<float>(extents.width),
+                                static_cast<float>(extents.height)};
 }
 
 void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName,
@@ -111,6 +173,19 @@ void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName,
                                                   bool               italic,
                                                   bool               oblique,
                                                   bool /* smallCaps */) {
+    do {
+        _fontName = fontName;
+        _fontSize = static_cast<int>(fontSize);
+        cairo_font_weight_t fontWeight = bold ? CAIRO_FONT_WEIGHT_BOLD : CAIRO_FONT_WEIGHT_NORMAL;
+        cairo_font_slant_t fontSlant = CAIRO_FONT_SLANT_NORMAL;
+        if(italic) {
+            fontSlant = CAIRO_FONT_SLANT_ITALIC;
+        } else if(oblique) {
+            fontSlant = CAIRO_FONT_SLANT_OBLIQUE;
+        }
+        cairo_select_font_face (_cr, fontName.c_str(), fontSlant, fontWeight);
+        cairo_set_font_size (_cr, _fontSize);
+    } while (false);
 }
 
 void CanvasRenderingContext2DDelegate::setTextAlign(CanvasTextAlign align) {
@@ -122,11 +197,11 @@ void CanvasRenderingContext2DDelegate::setTextBaseline(CanvasTextBaseline baseli
 }
 
 void CanvasRenderingContext2DDelegate::setFillStyle(float r, float g, float b, float a) {
-    _fillStyle = RGBA(r * 255, g * 255, b * 255, a * 255);
+    _fillStyle = {r, g, b, a};
 }
 
 void CanvasRenderingContext2DDelegate::setStrokeStyle(float r, float g, float b, float a) {
-    _strokeStyle = RGBA(r * 255, g * 255, b * 255, a * 255);
+    _strokeStyle = {r, g, b, a};
 }
 
 void CanvasRenderingContext2DDelegate::setLineWidth(float lineWidth) {
@@ -142,9 +217,23 @@ void CanvasRenderingContext2DDelegate::removeCustomFont() {
 
 // x, y offset value
 int CanvasRenderingContext2DDelegate::drawText(const std::string &text, int x, int y) {
+    cairo_move_to (_cr, x, y);
+    cairo_show_text (_cr, text.c_str());
+    return 0;
 }
 
 CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::sizeWithText(const wchar_t *pszText, int nLen) {
+    // if (text.empty())
+    //     return std::array<float, 2>{0.0f, 0.0f};
+    // XFontStruct *fs = XLoadQueryFont(dpy, "cursor");
+    // assert(fs);
+    // int font_ascent = 0;
+    // int font_descent = 0;
+    // XCharStruct overall;
+    // XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), nullptr, &font_ascent, &font_descent, &overall);
+    // return std::array<float, 2>{static_cast<float>(overall.lbearing),
+    //                             static_cast<float>(overall.rbearing)};
+    return std::array<float, 2>{0.0F, 0.0F};
 }
 
 void CanvasRenderingContext2DDelegate::prepareBitmap(int nWidth, int nHeight) {
@@ -157,6 +246,29 @@ void CanvasRenderingContext2DDelegate::fillTextureData() {
 }
 
 std::array<float, 2> CanvasRenderingContext2DDelegate::convertDrawPoint(Point point, const std::string &text) {
+    // int         font_ascent  = 0;
+    // int         font_descent = 0;
+    // int         direction    = 0;
+    // XCharStruct overall;
+    // XQueryTextExtents(_dis, _font->fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
+    // int width = overall.width;
+    // if (_textAlign == CanvasTextAlign::CENTER) {
+    //     point[0] -= width / 2.0f;
+    // } else if (_textAlign == CanvasTextAlign::RIGHT) {
+    //     point[0] -= width;
+    // }
+
+    // if (_textBaseLine == CanvasTextBaseline::TOP) {
+    //     point[1] += overall.ascent;
+    // } else if (_textBaseLine == CanvasTextBaseline::MIDDLE) {
+    //     point[1] += (overall.descent - overall.ascent) / 2 - overall.descent;
+    // } else if (_textBaseLine == CanvasTextBaseline::BOTTOM) {
+    //     point[1] += -overall.descent;
+    // } else if (_textBaseLine == CanvasTextBaseline::ALPHABETIC) {
+    //     //point[1] -= overall.ascent;
+    //     // X11 The default way of drawing text
+    // }
+
     return point;
 }
 
@@ -164,9 +276,11 @@ void CanvasRenderingContext2DDelegate::fill() {
 }
 
 void CanvasRenderingContext2DDelegate::setLineCap(const std::string &lineCap) {
+    //_lineCap = LineSolid;
 }
 
 void CanvasRenderingContext2DDelegate::setLineJoin(const std::string &lineJoin) {
+    //_lineJoin = JoinRound;
 }
 
 void CanvasRenderingContext2DDelegate::fillImageData(const Data & /* imageData */,

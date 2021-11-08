@@ -23,27 +23,46 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/interfaces/modules/IAccelerometer.h"
+#pragma once
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
-    #include "platform/win32/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
-    #include "platform/java/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    #include "platform/mac/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-    #include "platform/ios/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/linux/modules/Accelerometer.h"
-#elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    #include "platform/qnx/modules/Accelerometer.h"
-#endif
+#include <iostream>
+
+#include "platform/interfaces/modules/ISystemWindow.h"
+
+struct SDL_Window;
+struct SDL_WindowEvent;
 
 namespace cc {
 
-// static
-OSInterface::Ptr IAccelerometer::createAccelerometerInterface() {
-    return std::make_shared<Accelerometer>();
-}
+class SystemWindow : public ISystemWindow {
+public:
+    explicit SystemWindow();
+    ~SystemWindow() override;
+
+    class Delegate {
+    public:
+        virtual ~Delegate()                              = default;
+        virtual bool      createWindow(const char* title,
+                                       int x, int y, int w,
+                                       int h, int flags) = 0;
+        virtual uintptr_t getWindowHandler() const       = 0;
+    };
+
+    bool      createWindow(const char* title,
+                           int x, int y, int w,
+                           int h, int flags) override;
+    uintptr_t getWindowHandler() const override;
+
+    Size getViewSize() const override;
+    /*
+     @brief enable/disable(lock) the cursor, default is enabled
+     */
+    void setCursorEnabled(bool value) override;
+    void copyTextToClipboard(const std::string& text) override;
+
+private:
+    int _width{0};
+    int _height{0};
+};
 
 } // namespace cc
