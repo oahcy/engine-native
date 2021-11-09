@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.8)
 project(engin-native)
 
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/predefine.cmake)
