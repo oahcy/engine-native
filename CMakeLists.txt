@@ -1,4 +1,4 @@
-project(engin-native)
+project(engine-native)
 
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/predefine.cmake)
 
