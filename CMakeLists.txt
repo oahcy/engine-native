@@ -1,5 +1,3 @@
-project(engine-native)
-
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/predefine.cmake)
 
 ################################# engine source code ##################################
