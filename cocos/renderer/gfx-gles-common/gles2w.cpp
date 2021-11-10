@@ -1390,7 +1390,7 @@ void gles2wLoadProcs(PFNGLES2WLOADPROC gles2wLoad) {
     glGetQueryObjectuivEXT = reinterpret_cast<PFNGLGETQUERYOBJECTUIVEXTPROC>(gles2wLoad("glGetQueryObjectuivEXT"));
     glGetQueryObjecti64vEXT = reinterpret_cast<PFNGLGETQUERYOBJECTI64VEXTPROC>(gles2wLoad("glGetQueryObjecti64vEXT"));
     glGetQueryObjectui64vEXT = reinterpret_cast<PFNGLGETQUERYOBJECTUI64VEXTPROC>(gles2wLoad("glGetQueryObjectui64vEXT"));
-    //glGetInteger64vEXT = reinterpret_cast<PFNGLGETINTEGER64VEXTPROC>(gles2wLoad("glGetInteger64vEXT"));
+    glGetInteger64vEXT = reinterpret_cast<PFNGLGETINTEGER64VEXTPROC>(gles2wLoad("glGetInteger64vEXT"));
 #endif /* defined(GL_EXT_disjoint_timer_query) */
 
 #if defined(GL_EXT_draw_buffers)
@@ -2046,8 +2046,8 @@ void gles2wLoadProcs(PFNGLES2WLOADPROC gles2wLoad) {
 #endif /* defined(GL_OES_geometry_shader) */
 
 #if defined(GL_OES_get_program_binary)
-    // glGetProgramBinaryOES = reinterpret_cast<PFNGLGETPROGRAMBINARYOESPROC>(gles2wLoad("glGetProgramBinaryOES"));
-    // glProgramBinaryOES = reinterpret_cast<PFNGLPROGRAMBINARYOESPROC>(gles2wLoad("glProgramBinaryOES"));
+    glGetProgramBinaryOES = reinterpret_cast<PFNGLGETPROGRAMBINARYOESPROC>(gles2wLoad("glGetProgramBinaryOES"));
+    glProgramBinaryOES = reinterpret_cast<PFNGLPROGRAMBINARYOESPROC>(gles2wLoad("glProgramBinaryOES"));
 #endif /* defined(GL_OES_get_program_binary) */
 
 #if defined(GL_OES_mapbuffer)
@@ -2069,12 +2069,12 @@ void gles2wLoadProcs(PFNGLES2WLOADPROC gles2wLoad) {
 #endif /* defined(GL_OES_tessellation_shader) */
 
 #if defined(GL_OES_texture_3D)
-    // glTexImage3DOES = reinterpret_cast<PFNGLTEXIMAGE3DOESPROC>(gles2wLoad("glTexImage3DOES"));
-    // glTexSubImage3DOES = reinterpret_cast<PFNGLTEXSUBIMAGE3DOESPROC>(gles2wLoad("glTexSubImage3DOES"));
-    // glCopyTexSubImage3DOES = reinterpret_cast<PFNGLCOPYTEXSUBIMAGE3DOESPROC>(gles2wLoad("glCopyTexSubImage3DOES"));
-    // glCompressedTexImage3DOES = reinterpret_cast<PFNGLCOMPRESSEDTEXIMAGE3DOESPROC>(gles2wLoad("glCompressedTexImage3DOES"));
-    // glCompressedTexSubImage3DOES = reinterpret_cast<PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC>(gles2wLoad("glCompressedTexSubImage3DOES"));
-    // glFramebufferTexture3DOES = reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE3DOESPROC>(gles2wLoad("glFramebufferTexture3DOES"));
+    glTexImage3DOES = reinterpret_cast<PFNGLTEXIMAGE3DOESPROC>(gles2wLoad("glTexImage3DOES"));
+    glTexSubImage3DOES = reinterpret_cast<PFNGLTEXSUBIMAGE3DOESPROC>(gles2wLoad("glTexSubImage3DOES"));
+    glCopyTexSubImage3DOES = reinterpret_cast<PFNGLCOPYTEXSUBIMAGE3DOESPROC>(gles2wLoad("glCopyTexSubImage3DOES"));
+    glCompressedTexImage3DOES = reinterpret_cast<PFNGLCOMPRESSEDTEXIMAGE3DOESPROC>(gles2wLoad("glCompressedTexImage3DOES"));
+    glCompressedTexSubImage3DOES = reinterpret_cast<PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC>(gles2wLoad("glCompressedTexSubImage3DOES"));
+    glFramebufferTexture3DOES = reinterpret_cast<PFNGLFRAMEBUFFERTEXTURE3DOESPROC>(gles2wLoad("glFramebufferTexture3DOES"));
 #endif /* defined(GL_OES_texture_3D) */
 
 #if defined(GL_OES_texture_border_clamp)

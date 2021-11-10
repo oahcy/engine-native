@@ -44,11 +44,28 @@ bool FileUtilsQNX::init() {
     const char *xdg_config_path = getenv("XDG_CONFIG_HOME");
     std::string xdgConfigPath;
     if (xdg_config_path == NULL) {
-        xdgConfigPath = getenv("HOME");
+    	xdg_config_path = getenv("HOME");
+		if(xdg_config_path) {
+    		xdgConfigPath = xdg_config_path;
+    	} 
+#if _DEBUG
+    	// In qnx debugging mode, the environment variables of HOME cannot be obtained.
+    	// To facilitate debugging. Set a default directory
+    	if(!xdg_config_path){
+    		// Set up a user directory and resources in the same directory.
+    		xdgConfigPath = "/data/home/root";
+
+    		// You can get the current application directory through API
+    	    // char* buf = getcwd(NULL, 0);
+    	    // xdgConfigPath = buf;
+    		// free(buf);
+    	}
+#endif
         xdgConfigPath += "/.config";
     } else {
         xdgConfigPath = xdg_config_path;
     }
+
     _writablePath = xdgConfigPath;
     _writablePath += appPath.substr(appPath.find_last_of('/'));
     _writablePath += "/";

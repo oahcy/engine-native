@@ -97,12 +97,6 @@ public:
     cairo_t *        _cr{nullptr};
 
 private:
-    int32_t _x;
-    int32_t _y;
-    int     _lineCap;
-    int     _lineJoin;
-
-private:
     cc::Data    _imageData;
     std::string _curFontPath;
     int         _savedDC{0};

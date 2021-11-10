@@ -24,6 +24,7 @@
  ****************************************************************************/
 
 #include "platform/qnx/modules/CanvasRenderingContext2DDelegate.h"
+#include <iostream>
 
 namespace {
 #define RGB(r, g, b)     (int)((int)r | (((int)g) << 8) | (((int)b) << 16))
@@ -80,6 +81,8 @@ void CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {
     auto  textureSize = static_cast<int>(_bufferWidth * _bufferHeight * 4);
     auto *data        = static_cast<int8_t *>(malloc(sizeof(int8_t) * textureSize));
     memset(data, 0x00, textureSize);
+    _imageData.fastSet((unsigned char*)data, textureSize);
+
     if(_cr) {
         cairo_destroy(_cr);
     }
@@ -136,19 +139,19 @@ void CanvasRenderingContext2DDelegate::fillRect(float x, float y, float w, float
     cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
     cairo_rectangle (_cr, x, y, w, h);
     cairo_fill (_cr);
-    //XSetForeground(_dis, _gc, _fillStyle);
-    //XFillRectangle(_dis, _pixmap, _gc, x, y, w, h);
 }
 
 void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x, float y, float /*maxWidth*/) {
     if (text.empty() || _bufferWidth < 1.0F || _bufferHeight < 1.0F) {
         return;
     }
-
+    // cairo_font_weight_t fontWeight = CAIRO_FONT_WEIGHT_NORMAL; // bold ? CAIRO_FONT_WEIGHT_BOLD : CAIRO_FONT_WEIGHT_NORMAL;
+    // cairo_font_slant_t fontSlant = CAIRO_FONT_SLANT_NORMAL;
+    // cairo_select_font_face (_cr, "Arial", fontSlant, fontWeight);
+    cairo_set_font_size(_cr, _fontSize);
     Point offsetPoint = convertDrawPoint(Point{x, y}, text);
-    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
-    //XSetFont(_dis, _gc, _font->fid);
-    cairo_move_to (_cr, x, y);
+    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2],  _fillStyle[3]);
+    cairo_move_to (_cr, offsetPoint[0], offsetPoint[1]);
     cairo_show_text(_cr, text.c_str());
 }
 
@@ -163,7 +166,7 @@ CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::measure
         return std::array<float, 2>{0.0f, 0.0f};
     cairo_text_extents_t extents;
     cairo_text_extents(_cr, text.c_str(), &extents);
-    return std::array<float, 2>{static_cast<float>(extents.width),
+    return std::array<float, 2>{static_cast<float>(extents.x_advance),
                                 static_cast<float>(extents.height)};
 }
 
@@ -183,7 +186,8 @@ void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName,
         } else if(oblique) {
             fontSlant = CAIRO_FONT_SLANT_OBLIQUE;
         }
-        cairo_select_font_face (_cr, fontName.c_str(), fontSlant, fontWeight);
+        std::cout << _fontName << std::endl;
+        cairo_select_font_face (_cr, _fontName.c_str(), fontSlant, fontWeight);
         cairo_set_font_size (_cr, _fontSize);
     } while (false);
 }
@@ -223,16 +227,6 @@ int CanvasRenderingContext2DDelegate::drawText(const std::string &text, int x, i
 }
 
 CanvasRenderingContext2DDelegate::Size CanvasRenderingContext2DDelegate::sizeWithText(const wchar_t *pszText, int nLen) {
-    // if (text.empty())
-    //     return std::array<float, 2>{0.0f, 0.0f};
-    // XFontStruct *fs = XLoadQueryFont(dpy, "cursor");
-    // assert(fs);
-    // int font_ascent = 0;
-    // int font_descent = 0;
-    // XCharStruct overall;
-    // XQueryTextExtents(_dis, fs -> fid, text.c_str(), text.length(), nullptr, &font_ascent, &font_descent, &overall);
-    // return std::array<float, 2>{static_cast<float>(overall.lbearing),
-    //                             static_cast<float>(overall.rbearing)};
     return std::array<float, 2>{0.0F, 0.0F};
 }
 
@@ -246,28 +240,26 @@ void CanvasRenderingContext2DDelegate::fillTextureData() {
 }
 
 std::array<float, 2> CanvasRenderingContext2DDelegate::convertDrawPoint(Point point, const std::string &text) {
-    // int         font_ascent  = 0;
-    // int         font_descent = 0;
-    // int         direction    = 0;
-    // XCharStruct overall;
-    // XQueryTextExtents(_dis, _font->fid, text.c_str(), text.length(), &direction, &font_ascent, &font_descent, &overall);
-    // int width = overall.width;
-    // if (_textAlign == CanvasTextAlign::CENTER) {
-    //     point[0] -= width / 2.0f;
-    // } else if (_textAlign == CanvasTextAlign::RIGHT) {
-    //     point[0] -= width;
-    // }
+    int         font_ascent  = 0;
+    int         font_descent = 0;
+    int         direction    = 0;
+    cairo_text_extents_t extents;
+    cairo_text_extents(_cr, text.c_str(), &extents);
 
-    // if (_textBaseLine == CanvasTextBaseline::TOP) {
-    //     point[1] += overall.ascent;
-    // } else if (_textBaseLine == CanvasTextBaseline::MIDDLE) {
-    //     point[1] += (overall.descent - overall.ascent) / 2 - overall.descent;
-    // } else if (_textBaseLine == CanvasTextBaseline::BOTTOM) {
-    //     point[1] += -overall.descent;
-    // } else if (_textBaseLine == CanvasTextBaseline::ALPHABETIC) {
-    //     //point[1] -= overall.ascent;
-    //     // X11 The default way of drawing text
-    // }
+    int width = extents.width;
+    if (_textAlign == CanvasTextAlign::CENTER) {
+        point[0] -= width / 2.0f;
+    } else if (_textAlign == CanvasTextAlign::RIGHT) {
+        point[0] -= width;
+    }
+
+     if (_textBaseLine == CanvasTextBaseline::TOP) {
+         point[1] += -extents.y_bearing;
+    } else if (_textBaseLine == CanvasTextBaseline::MIDDLE) {
+         point[1] += extents.height / 2;
+    } else if (_textBaseLine == CanvasTextBaseline::BOTTOM) {
+         point[1] += extents.height;
+    }
 
     return point;
 }
@@ -276,11 +268,9 @@ void CanvasRenderingContext2DDelegate::fill() {
 }
 
 void CanvasRenderingContext2DDelegate::setLineCap(const std::string &lineCap) {
-    //_lineCap = LineSolid;
 }
 
 void CanvasRenderingContext2DDelegate::setLineJoin(const std::string &lineJoin) {
-    //_lineJoin = JoinRound;
 }
 
 void CanvasRenderingContext2DDelegate::fillImageData(const Data & /* imageData */,
@@ -288,8 +278,6 @@ void CanvasRenderingContext2DDelegate::fillImageData(const Data & /* imageData *
                                                      float /* imageHeight */,
                                                      float /* offsetX */,
                                                      float /* offsetY */) {
-    //XCreateImage(display, visual, DefaultDepth(display,DefaultScreen(display)), ZPixmap, 0, image32, width, height, 32, 0);
-    //XPutImage(dpy, w, gc, image, 0, 0, 50, 60, 40, 30);
 }
 
 void CanvasRenderingContext2DDelegate::strokeText(const std::string & /* text */,
