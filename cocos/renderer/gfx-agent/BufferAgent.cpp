@@ -28,7 +28,7 @@
 
 #include "BufferAgent.h"
 #include "DeviceAgent.h"
-#include <string.h>
+#include <cstring>
 
 namespace cc {
 namespace gfx {
