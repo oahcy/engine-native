@@ -59,7 +59,7 @@ int StringUtil::vprintf(char *buf, const char *last, const char *fmt, va_list ar
         return 0;
     }
 
-    int count = (int)(last - buf);
+    int count = last - buf;
     int ret   = vsnprintf(buf, count, fmt, args);
     if (ret >= count - 1) {
         return count - 1;

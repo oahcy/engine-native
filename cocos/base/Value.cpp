@@ -32,6 +32,7 @@
 #include <iomanip>
 #include <memory.h>
 #include <sstream>
+#include <algorithm>
 
 #include "base/Utils.h"
 
@@ -375,24 +376,28 @@ bool Value::operator==(const Value &v) const {
         case Type::MAP: {
             const auto &map1 = *(this->_field.mapVal);
             const auto &map2 = *(v._field.mapVal);
-            for (const auto &kvp : map1) {
+            if (std::all_of(map1.begin(), map1.end(), [&map2](auto &kvp) {
                 auto it = map2.find(kvp.first);
                 if (it == map2.end() || it->second != kvp.second) {
                     return false;
                 }
-            }
+                return true;
+            })) {
             return true;
+            }
         }
         case Type::INT_KEY_MAP: {
             const auto &map1 = *(this->_field.intKeyMapVal);
             const auto &map2 = *(v._field.intKeyMapVal);
-            for (const auto &kvp : map1) {
+            if (std::all_of(map1.begin(), map1.end(), [&map2](auto &kvp) {
                 auto it = map2.find(kvp.first);
                 if (it == map2.end() || it->second != kvp.second) {
                     return false;
                 }
-            }
+                return true;
+            })) {
             return true;
+            }
         }
         default:
             break;
