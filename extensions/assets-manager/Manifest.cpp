@@ -66,13 +66,11 @@ static int cmpVersion(const std::string &v1, const std::string &v2) {
     }
     int ret = 0;
     for (i = 0; i < 4; i++) {
-        if (octV1[i] > octV2[i]) {
-            ret = 1;
-            break;
-        } else if (octV1[i] < octV2[i]) {
-            ret = -1;
-            break;
+        if (octV1[i] == octV2[i]) {
+            continue;
         }
+        ret = (octV1[i] > octV2[i]) ? 1 : -1;
+        break;
     }
     return ret;
 }
