@@ -141,7 +141,7 @@ static void wsLog(const char *format, ...) {
 }
 
 #else
-    #define wsLog printf
+    #define wsLog printf //NOLINT
 #endif
 
 #define DO_QUOTEME(x) #x

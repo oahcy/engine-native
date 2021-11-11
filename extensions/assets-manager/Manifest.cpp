@@ -64,10 +64,12 @@ static int cmpVersion(const std::string &v1, const std::string &v2) {
         return strcmp(v1.c_str(), v2.c_str());
     }
     for (i = 0; i < 4; i++) {
-        if (oct_v1[i] > oct_v2[i])
+        if (oct_v1[i] > oct_v2[i]) {
             return 1;
-        else if (oct_v1[i] < oct_v2[i])
+        }
+        else if (oct_v1[i] < oct_v2[i]) {
             return -1;
+        }
     }
     return 0;
 }

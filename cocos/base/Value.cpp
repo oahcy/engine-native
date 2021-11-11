@@ -681,7 +681,7 @@ static std::string getTabs(int depth) {
 
 static std::string visit(const Value &v, int depth);
 
-static std::string visitVector(const ValueVector &v, int depth) {
+static std::string visitVector(const ValueVector &v, int depth) { //NOLINT[misc-no-recursion]
     std::stringstream ret;
 
     if (depth > 0) {
@@ -702,7 +702,7 @@ static std::string visitVector(const ValueVector &v, int depth) {
 }
 
 template <class T>
-static std::string visitMap(const T &v, int depth) {
+static std::string visitMap(const T &v, int depth) { //NOLINT[misc-no-recursion]
     std::stringstream ret;
 
     if (depth > 0) {
@@ -721,7 +721,7 @@ static std::string visitMap(const T &v, int depth) {
     return ret.str();
 }
 
-static std::string visit(const Value &v, int depth) {
+static std::string visit(const Value &v, int depth) { //NOLINT[misc-no-recursion]
     std::stringstream ret;
 
     switch (v.getType()) {
