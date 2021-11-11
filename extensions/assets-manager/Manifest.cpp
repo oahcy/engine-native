@@ -56,18 +56,18 @@ NS_CC_EXT_BEGIN
 
 static int cmpVersion(const std::string &v1, const std::string &v2) {
     int i;
-    int oct_v1[4] = {0};
-    int oct_v2[4] = {0};
-    int filled1 = std::sscanf(v1.c_str(), "%d.%d.%d.%d", &oct_v1[0], &oct_v1[1], &oct_v1[2], &oct_v1[3]);
-    int filled2 = std::sscanf(v2.c_str(), "%d.%d.%d.%d", &oct_v2[0], &oct_v2[1], &oct_v2[2], &oct_v2[3]);
+    int octV1[4] = {0}; 
+    int octV2[4] = {0};
+    int filled1 = std::sscanf(v1.c_str(), "%d.%d.%d.%d", &octV1[0], &octV1[1], &octV1[2], &octV1[3]);
+    int filled2 = std::sscanf(v2.c_str(), "%d.%d.%d.%d", &octV2[0], &octV2[1], &octV2[2], &octV2[3]);
 
     if (filled1 == 0 || filled2 == 0) {
         return strcmp(v1.c_str(), v2.c_str());
     }
     for (i = 0; i < 4; i++) {
-        if (oct_v1[i] > oct_v2[i]) {
+        if (octV1[i] > octV2[i]) {
             return 1;
-        } else if (oct_v1[i] < oct_v2[i]) {
+        } else if (octV1[i] < octV2[i]) {
             return -1;
         }
     }
@@ -237,7 +237,7 @@ bool Manifest::versionGreater(const Manifest *b, const std::function<int(const s
 }
 
 std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Manifest *b) const {
-    std::unordered_map<std::string, AssetDiff>    diff_map;
+    std::unordered_map<std::string, AssetDiff>    diffMap;
     const std::unordered_map<std::string, Asset> &bAssets = b->getAssets();
 
     std::string key;
@@ -256,7 +256,7 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
             AssetDiff diff;
             diff.asset = valueA;
             diff.type  = DiffType::DELETED;
-            diff_map.emplace(key, diff);
+            diffMap.emplace(key, diff);
             continue;
         }
 
@@ -266,7 +266,7 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
             AssetDiff diff;
             diff.asset = valueB;
             diff.type  = DiffType::MODIFIED;
-            diff_map.emplace(key, diff);
+            diffMap.emplace(key, diff);
         }
     }
 
@@ -280,11 +280,11 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
             AssetDiff diff;
             diff.asset = valueB;
             diff.type  = DiffType::ADDED;
-            diff_map.emplace(key, diff);
+            diffMap.emplace(key, diff);
         }
     }
 
-    return diff_map;
+    return diffMap;
 }
 
 void Manifest::genResumeAssetsList(DownloadUnits *units) const {
