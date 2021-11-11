@@ -64,44 +64,39 @@ static int cmpVersion(const std::string &v1, const std::string &v2) {
     if (filled1 == 0 || filled2 == 0) {
         return strcmp(v1.c_str(), v2.c_str());
     }
+    int ret = 0;
     for (i = 0; i < 4; i++) {
         if (octV1[i] > octV2[i]) {
-            return 1;
+            ret = 1;
+            break;
         } else if (octV1[i] < octV2[i]) {
-            return -1;
+            ret = -1;
+            break;
         }
     }
-    return 0;
+    return ret;
 }
 
 Manifest::Manifest(const std::string &manifestUrl /* = ""*/)
 : _versionLoaded(false),
   _loaded(false),
-  _updating(false),
-  _manifestRoot(""),
-  _remoteManifestUrl(""),
-  _remoteVersionUrl(""),
-  _version(""),
-  _engineVer("") {
+  _updating(false) {
     // Init variables
     _fileUtils = FileUtils::getInstance();
-    if (manifestUrl.size() > 0)
+    if (!manifestUrl.empty()) {
         parseFile(manifestUrl);
+    }
 }
 
 Manifest::Manifest(const std::string &content, const std::string &manifestRoot)
 : _versionLoaded(false),
   _loaded(false),
-  _updating(false),
-  _manifestRoot(""),
-  _remoteManifestUrl(""),
-  _remoteVersionUrl(""),
-  _version(""),
-  _engineVer("") {
+  _updating(false) {
     // Init variables
     _fileUtils = FileUtils::getInstance();
-    if (content.size() > 0)
+    if (!content.empty()) {
         parseJSONString(content, manifestRoot);
+    }
 }
 
 void Manifest::loadJson(const std::string &url) {
@@ -111,7 +106,7 @@ void Manifest::loadJson(const std::string &url) {
         // Load file content
         content = _fileUtils->getStringFromFile(url);
 
-        if (content.size() == 0) {
+        if (content.empty()) {
             CC_LOG_DEBUG("Fail to retrieve local file content: %s\n", url.c_str());
         } else {
             loadJsonFromString(content);
@@ -120,7 +115,7 @@ void Manifest::loadJson(const std::string &url) {
 }
 
 void Manifest::loadJsonFromString(const std::string &content) {
-    if (content.size() == 0) {
+    if (content.empty()) {
         CC_LOG_DEBUG("Fail to parse empty json content.");
     } else {
         // Parse file with rapid json
