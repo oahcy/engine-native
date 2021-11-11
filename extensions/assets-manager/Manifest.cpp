@@ -221,7 +221,7 @@ bool Manifest::versionGreaterOrEquals(const Manifest *b, const std::function<int
 
 bool Manifest::versionGreater(const Manifest *b, const std::function<int(const std::string &versionA, const std::string &versionB)> &handle) const {
     std::string localVersion = getVersion();
-    std::string bVersion     = b->getVersion();
+    const std::string& bVersion     = b->getVersion();
     bool        greater;
     if (handle) {
         greater = handle(localVersion, bVersion) > 0;
@@ -306,7 +306,7 @@ std::vector<std::string> Manifest::getSearchPaths() const {
         if (!path.empty() && path[path.size() - 1] != '/') {
             path.append("/");
         }
-        path = _manifestRoot + path;
+        path = _manifestRoot + path; //NOLINT
         searchPaths.push_back(path);
     }
     return searchPaths;
@@ -314,7 +314,7 @@ std::vector<std::string> Manifest::getSearchPaths() const {
 
 void Manifest::prependSearchPaths() {
     std::vector<std::string>           searchPaths           = FileUtils::getInstance()->getSearchPaths();
-    std::vector<std::string>::iterator iter                  = searchPaths.begin();
+    auto iter                  = searchPaths.begin();
     bool                               needChangeSearchPaths = false;
     if (std::find(searchPaths.begin(), searchPaths.end(), _manifestRoot) == searchPaths.end()) {
         searchPaths.insert(iter, _manifestRoot);

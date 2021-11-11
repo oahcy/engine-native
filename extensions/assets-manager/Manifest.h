@@ -24,8 +24,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __Manifest__
-#define __Manifest__
+#ifndef __Manifest_H__
+#define __Manifest_H__
 
 #include <string>
 #include <unordered_map>
@@ -56,7 +56,7 @@ struct ManifestAsset {
     int downloadState;
 };
 
-typedef std::unordered_map<std::string, DownloadUnit> DownloadUnits;
+using DownloadUnits =  std::unordered_map<std::string, DownloadUnit>;
 
 class CC_EX_DLL Manifest : public Ref {
 public:
@@ -77,7 +77,7 @@ public:
     };
 
     //! Asset object
-    typedef ManifestAsset Asset;
+    using Asset = ManifestAsset;
 
     //! Object indicate the difference between two Assets
     struct AssetDiff {
@@ -122,7 +122,7 @@ public:
     /** @brief Constructor for Manifest class, create manifest by parsing a json file
      * @param manifestUrl Url of the local manifest
      */
-    Manifest(const std::string &manifestUrl = "");
+    explicit Manifest(const std::string &manifestUrl = "");
 
     /** @brief Constructor for Manifest class, create manifest by parsing a json string
      * @param content Json string content
@@ -289,4 +289,4 @@ private:
 };
 
 NS_CC_EXT_END
-#endif /* defined(__Manifest__) */
+#endif /* defined(__Manifest_H__) */
