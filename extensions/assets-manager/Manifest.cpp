@@ -188,18 +188,21 @@ bool Manifest::versionEquals(const Manifest *b) const {
         std::vector<std::string>                     bGroups   = b->getGroups();
         std::unordered_map<std::string, std::string> bGroupVer = b->getGroupVerions();
         // Check group size
-        if (bGroups.size() != _groups.size())
+        if (bGroups.size() != _groups.size()) {
             return false;
+        }
 
         // Check groups version
         for (unsigned int i = 0; i < _groups.size(); ++i) {
             std::string gid = _groups[i];
             // Check group name
-            if (gid != bGroups[i])
+            if (gid != bGroups[i]) {
                 return false;
+            }
             // Check group version
-            if (_groupVer.at(gid) != bGroupVer.at(gid))
+            if (_groupVer.at(gid) != bGroupVer.at(gid)) {
                 return false;
+            }
         }
     }
     return true;
@@ -319,12 +322,12 @@ void Manifest::prependSearchPaths() {
         needChangeSearchPaths = true;
     }
 
-    for (int i = (int)_searchPaths.size() - 1; i >= 0; i--) {
+    for (int i = static_cast<int>(_searchPaths.size()) - 1; i >= 0; i--) {
         std::string path = _searchPaths[i];
-        if (path.size() > 0 && path[path.size() - 1] != '/') {
+        if (!path.empty() && path[path.size() - 1] != '/') {
             path.append("/");
         }
-        path = _manifestRoot + path;
+        path = _manifestRoot + path; //NOLINT
         iter = searchPaths.begin();
         searchPaths.insert(iter, path);
         needChangeSearchPaths = true;
@@ -379,9 +382,9 @@ void Manifest::setAssetDownloadState(const std::string &key, const Manifest::Dow
                     if (assets.HasMember(key.c_str())) {
                         rapidjson::Value &entry = assets[key.c_str()];
                         if (entry.HasMember(KEY_DOWNLOAD_STATE) && entry[KEY_DOWNLOAD_STATE].IsInt()) {
-                            entry[KEY_DOWNLOAD_STATE].SetInt((int)state);
+                            entry[KEY_DOWNLOAD_STATE].SetInt(static_cast<int>(state));
                         } else {
-                            entry.AddMember<int>(KEY_DOWNLOAD_STATE, (int)state, _json.GetAllocator());
+                            entry.AddMember<int>(KEY_DOWNLOAD_STATE, static_cast<int>(state), _json.GetAllocator());
                         }
                     }
                 }
@@ -431,7 +434,7 @@ Manifest::Asset Manifest::parseAsset(const std::string &path, const rapidjson::V
     }
 
     if (json.HasMember(KEY_SIZE) && json[KEY_SIZE].IsInt()) {
-        asset.size = json[KEY_SIZE].GetInt();
+        asset.size = static_cast<float>(json[KEY_SIZE].GetInt());
     } else {
         asset.size = 0;
     }
@@ -497,7 +500,7 @@ void Manifest::loadManifest(const rapidjson::Document &json) {
     if (json.HasMember(KEY_PACKAGE_URL) && json[KEY_PACKAGE_URL].IsString()) {
         _packageUrl = json[KEY_PACKAGE_URL].GetString();
         // Append automatically "/"
-        if (_packageUrl.size() > 0 && _packageUrl[_packageUrl.size() - 1] != '/') {
+        if (!_packageUrl.empty() && _packageUrl[_packageUrl.size() - 1] != '/') {
             _packageUrl.append("/");
         }
     }
@@ -520,7 +523,7 @@ void Manifest::loadManifest(const rapidjson::Document &json) {
         if (paths.IsArray()) {
             for (rapidjson::SizeType i = 0; i < paths.Size(); ++i) {
                 if (paths[i].IsString()) {
-                    _searchPaths.push_back(paths[i].GetString());
+                    _searchPaths.emplace_back(paths[i].GetString());
                 }
             }
         }
