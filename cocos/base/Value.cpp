@@ -35,7 +35,7 @@
 #include <algorithm>
 
 #include "base/Utils.h"
-
+// NOLINTBEGIN(misc-no-recursion)
 namespace cc {
 
 const ValueVector    VALUE_VECTOR_NULL;
@@ -831,3 +831,4 @@ void Value::reset(Type type) {
 }
 
 } // namespace cc
+// NOLINTEND(misc-no-recursion)
