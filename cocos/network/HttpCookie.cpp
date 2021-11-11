@@ -74,9 +74,9 @@ void HttpCookie::readFile() {
             if (co.domain.at(0) == '.') {
                 co.domain = co.domain.substr(1);
             }
-            co.tailmatch = strcmp("TRUE", elems[1].c_str()) ? true : false;
+            co.tailmatch = (strcmp("TRUE", elems[1].c_str()) == 0) ? false : true;
             co.path      = elems[2];
-            co.secure    = strcmp("TRUE", elems[3].c_str()) ? true : false;
+            co.secure    = (strcmp("TRUE", elems[3].c_str()) == 0)? false : true;
             co.expires   = elems[4];
             co.name      = elems[5];
             co.value     = elems[6];
