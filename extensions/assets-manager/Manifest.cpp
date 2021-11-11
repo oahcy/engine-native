@@ -301,9 +301,9 @@ std::vector<std::string> Manifest::getSearchPaths() const {
     std::vector<std::string> searchPaths;
     searchPaths.push_back(_manifestRoot);
 
-    for (int i = static_cast<int>(_searchPaths.size()） - 1; i >= 0; i--) {
+    for (int i = static_cast<int>(_searchPaths.size()) - 1; i >= 0; i--) {
         std::string path = _searchPaths[i];
-        if (！path.empty() && path[path.size() - 1] != '/') {
+        if (!path.empty() && path[path.size() - 1] != '/') {
             path.append("/");
         }
         path = _manifestRoot + path;
