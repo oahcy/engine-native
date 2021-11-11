@@ -74,9 +74,9 @@ void HttpCookie::readFile() {
             if (co.domain.at(0) == '.') {
                 co.domain = co.domain.substr(1);
             }
-            co.tailmatch = (strcmp("TRUE", elems[1].c_str()) == 0) ? false : true;
+            co.tailmatch = (strcmp("TRUE", elems[1].c_str()) != 0);
             co.path      = elems[2];
-            co.secure    = (strcmp("TRUE", elems[3].c_str()) == 0)? false : true;
+            co.secure    = (strcmp("TRUE", elems[3].c_str()) != 0);
             co.expires   = elems[4];
             co.name      = elems[5];
             co.value     = elems[6];
@@ -90,7 +90,7 @@ const std::vector<CookiesInfo> *HttpCookie::getCookies() const {
 }
 
 const CookiesInfo *HttpCookie::getMatchCookie(const std::string &url) const {
-    for (auto &cookie : _cookies) {
+    for (const auto &cookie : _cookies) {
         if (url.find(cookie.domain) != std::string::npos) {
             return &cookie;
         }

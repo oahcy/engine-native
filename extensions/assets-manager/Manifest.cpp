@@ -29,7 +29,7 @@
 #include "json/prettywriter.h"
 #include "json/stringbuffer.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <algorithm>
 #include <fstream>
 
@@ -56,7 +56,8 @@ NS_CC_EXT_BEGIN
 
 static int cmpVersion(const std::string &v1, const std::string &v2) {
     int i;
-    int oct_v1[4] = {0}, oct_v2[4] = {0};
+    int oct_v1[4] = {0};
+    int oct_v2[4] = {0};
     int filled1 = std::sscanf(v1.c_str(), "%d.%d.%d.%d", &oct_v1[0], &oct_v1[1], &oct_v1[2], &oct_v1[3]);
     int filled2 = std::sscanf(v2.c_str(), "%d.%d.%d.%d", &oct_v2[0], &oct_v2[1], &oct_v2[2], &oct_v2[3]);
 
@@ -243,7 +244,8 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
     Asset       valueA;
     Asset       valueB;
 
-    std::unordered_map<std::string, Asset>::const_iterator valueIt, it;
+    std::unordered_map<std::string, Asset>::const_iterator valueIt;
+    std::unordered_map<std::string, Asset>::const_iterator it;
     for (it = _assets.begin(); it != _assets.end(); ++it) {
         key    = it->first;
         valueA = it->second;
