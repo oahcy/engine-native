@@ -772,10 +772,10 @@ void Value::clear() {
             _field.intVal = 0;
             break;
         case Type::UNSIGNED:
-            _field.unsignedVal = 0u;
+            _field.unsignedVal = 0U;
             break;
         case Type::FLOAT:
-            _field.floatVal = 0.0f;
+            _field.floatVal = 0.0F;
             break;
         case Type::DOUBLE:
             _field.doubleVal = 0.0;
