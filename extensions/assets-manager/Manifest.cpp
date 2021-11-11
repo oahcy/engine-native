@@ -303,8 +303,9 @@ std::vector<std::string> Manifest::getSearchPaths() const {
 
     for (int i = (int)_searchPaths.size() - 1; i >= 0; i--) {
         std::string path = _searchPaths[i];
-        if (path.size() > 0 && path[path.size() - 1] != '/')
+        if (path.size() > 0 && path[path.size() - 1] != '/') {
             path.append("/");
+        }
         path = _manifestRoot + path;
         searchPaths.push_back(path);
     }
@@ -322,8 +323,9 @@ void Manifest::prependSearchPaths() {
 
     for (int i = (int)_searchPaths.size() - 1; i >= 0; i--) {
         std::string path = _searchPaths[i];
-        if (path.size() > 0 && path[path.size() - 1] != '/')
+        if (path.size() > 0 && path[path.size() - 1] != '/') {
             path.append("/");
+        }
         path = _manifestRoot + path;
         iter = searchPaths.begin();
         searchPaths.insert(iter, path);
@@ -416,8 +418,9 @@ Manifest::Asset Manifest::parseAsset(const std::string &path, const rapidjson::V
 
     if (json.HasMember(KEY_MD5) && json[KEY_MD5].IsString()) {
         asset.md5 = json[KEY_MD5].GetString();
-    } else
+    } else {
         asset.md5 = "";
+    }
 
     if (json.HasMember(KEY_PATH) && json[KEY_PATH].IsString()) {
         asset.path = json[KEY_PATH].GetString();
@@ -425,18 +428,21 @@ Manifest::Asset Manifest::parseAsset(const std::string &path, const rapidjson::V
 
     if (json.HasMember(KEY_COMPRESSED) && json[KEY_COMPRESSED].IsBool()) {
         asset.compressed = json[KEY_COMPRESSED].GetBool();
-    } else
+    } else {
         asset.compressed = false;
+    }
 
     if (json.HasMember(KEY_SIZE) && json[KEY_SIZE].IsInt()) {
         asset.size = json[KEY_SIZE].GetInt();
-    } else
+    } else {
         asset.size = 0;
+    }
 
     if (json.HasMember(KEY_DOWNLOAD_STATE) && json[KEY_DOWNLOAD_STATE].IsInt()) {
         asset.downloadState = (json[KEY_DOWNLOAD_STATE].GetInt());
-    } else
+    } else {
         asset.downloadState = DownloadState::UNMARKED;
+    }
 
     return asset;
 }
@@ -532,8 +538,9 @@ void Manifest::saveToFile(const std::string &filepath) {
 
     std::ofstream output(FileUtils::getInstance()->getSuitableFOpen(filepath), std::ofstream::out);
 
-    if (!output.bad())
+    if (!output.bad()) {
         output << buffer.GetString() << std::endl;
+    }
 }
 
 NS_CC_EXT_END
