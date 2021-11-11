@@ -22,7 +22,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-#include "platform/linux/modules/Network.h"
+#include "platform/qnx/modules/Network.h"
 
 namespace cc {
 

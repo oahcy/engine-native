@@ -35,7 +35,7 @@
 #include "SDL2/SDL_syswm.h"
 #include "bindings/event/EventDispatcher.h"
 #include "platform/IEventDispatch.h"
-#include "platform/qnx/QNXPlatform.h"
+#include "platform/qnx/QnxPlatform.h"
 
 namespace {
 
@@ -53,7 +53,7 @@ bool SystemWindow::createWindow(const char *title,
                                 int h, int flags) {
     // Create window
 
-    QNXPlatform *platform = dynamic_cast<QNXPlatform *>(BasePlatform::getPlatform());
+    QnxPlatform *platform = dynamic_cast<QnxPlatform *>(BasePlatform::getPlatform());
     CCASSERT(platform != nullptr, "Platform pointer can't be null");
     platform->createWindow(title, x, y, w, h, flags);
     _width  = w;
@@ -63,7 +63,7 @@ bool SystemWindow::createWindow(const char *title,
 
 uintptr_t SystemWindow::getWindowHandler() const {
     //return _handle;
-    QNXPlatform *platform = dynamic_cast<QNXPlatform *>(BasePlatform::getPlatform());
+    QnxPlatform *platform = dynamic_cast<QnxPlatform *>(BasePlatform::getPlatform());
     CCASSERT(platform != nullptr, "Platform pointer can't be null");
     return platform->getWindowHandler();
 }

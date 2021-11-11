@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/qnx/QNXPlatform.h"
+#include "platform/qnx/QnxPlatform.h"
 
 #include <sys/time.h>
 #include <unistd.h>
@@ -152,15 +152,8 @@ int windowFlagsToSDLWindowFlag(int flags) {
 } // namespace
 
 namespace cc {
-QNXPlatform::QNXPlatform() = default;
-QNXPlatform::~QNXPlatform() {
-    // if (_handle) {
-    //     SDL_DestroyWindow(_handle);
-    //     _handle = nullptr;
-    // }
-    // if (_inited) {
-    //     SDL_Quit();
-    // }
+QnxPlatform::QnxPlatform() = default;
+QnxPlatform::~QnxPlatform() {
     if (_screenWin) {
         screen_destroy_window(_screenWin);
     }
@@ -169,7 +162,7 @@ QNXPlatform::~QNXPlatform() {
     }
 }
 
-int32_t QNXPlatform::init() {
+int32_t QnxPlatform::init() {
     UniversalPlatform::init();
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -189,7 +182,7 @@ static long getCurrentMillSecond() {
     return lLastTime;
 }
 
-int32_t QNXPlatform::loop() {
+int32_t QnxPlatform::loop() {
     long lastTime        = 0L;
     long curTime         = 0L;
     long desiredInterval = 0L;
@@ -214,7 +207,7 @@ int32_t QNXPlatform::loop() {
     return 0;
 }
 
-void QNXPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
+void QnxPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
     WindowEvent ev;
     switch (wevent.event) {
         case SDL_WINDOWEVENT_SHOWN: {
@@ -263,7 +256,7 @@ void QNXPlatform::handleWindowEvent(SDL_WindowEvent &wevent) {
     }
 }
 
-void QNXPlatform::pollEvent() {
+void QnxPlatform::pollEvent() {
     SDL_Event sdlEvent;
     int       cnt = SDL_PollEvent(&sdlEvent);
     if (cnt == 0) {
@@ -375,7 +368,7 @@ void QNXPlatform::pollEvent() {
     }
 }
 
-bool QNXPlatform::createWindow(const char *title,
+bool QnxPlatform::createWindow(const char *title,
                                int x, int y, int w,
                                int h, int flags) {
     if (_inited) {
@@ -425,7 +418,7 @@ bool QNXPlatform::createWindow(const char *title,
     return true;
 }
 
-uintptr_t QNXPlatform::getWindowHandler() const {
+uintptr_t QnxPlatform::getWindowHandler() const {
     //int32_t *window = (int32_t *)(_handle->driverdata);
     return reinterpret_cast<uintptr_t>(_screenWin);
 }

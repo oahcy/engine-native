@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/linux/modules/Screen.h"
+#include "platform/qnx/modules/Screen.h"
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "base/Macros.h"
 

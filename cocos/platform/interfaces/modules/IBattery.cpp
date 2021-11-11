@@ -34,7 +34,7 @@
 #elif (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
     #include "platform/ios/modules/Battery.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
-    #include "platform/ios/modules/Battery.h"
+    #include "platform/linux/modules/Battery.h"
 #elif (CC_PLATFORM == CC_PLATFORM_QNX)
     #include "platform/qnx/modules/Battery.h"
 #endif

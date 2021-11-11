@@ -22,7 +22,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-#include "platform/linux/modules/Battery.h"
+#include "platform/qnx/modules/Battery.h"
 
 namespace cc {
 

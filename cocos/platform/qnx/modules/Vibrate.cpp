@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/linux/modules/Vibrate.h"
+#include "platform/qnx/modules/Vibrate.h"
 
 #include "base/Macros.h"
 

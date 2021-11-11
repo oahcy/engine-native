@@ -58,7 +58,7 @@ BasePlatform* BasePlatform::getPlatform() {
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     static LinuxPlatform platform;
 #elif (CC_PLATFORM == CC_PLATFORM_QNX)
-    static QNXPlatform platform;
+    static QnxPlatform platform;
 #endif
     return &platform;
 }

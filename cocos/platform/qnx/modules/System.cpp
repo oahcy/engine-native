@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "platform/linux/modules/System.h"
+#include "platform/qnx/modules/System.h"
 #include <string.h>
 #include <sys/utsname.h>
 

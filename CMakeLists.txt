@@ -387,8 +387,8 @@ elseif(LINUX)
     )
 elseif(QNX)
     cocos_source_files(
-        cocos/platform/qnx/QNXPlatform.cpp
-        cocos/platform/qnx/QNXPlatform.h
+        cocos/platform/qnx/QnxPlatform.cpp
+        cocos/platform/qnx/QnxPlatform.h
     )
 elseif(ANDROID)
     cocos_source_files(

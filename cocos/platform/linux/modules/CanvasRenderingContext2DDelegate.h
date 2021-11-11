@@ -119,12 +119,12 @@ private:
     float       _bufferHeight{0.0F};
 
     std::string        _fontName;
-    int                _fontSize;
+    int                _fontSize{0};
     Size               _textSize;
-    CanvasTextAlign    _textAlign;
-    CanvasTextBaseline _textBaseLine;
-    unsigned long      _fillStyle;
-    unsigned long      _strokeStyle;
+    CanvasTextAlign    _textAlign{CanvasTextAlign::CENTER};
+    CanvasTextBaseline _textBaseLine{CanvasTextBaseline::TOP};
+    unsigned long      _fillStyle{0};
+    unsigned long      _strokeStyle{0};
 };
 
 } // namespace cc

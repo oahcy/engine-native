@@ -34,14 +34,14 @@ struct SDL_Window;
 
 namespace cc {
 
-class QNXPlatform : public UniversalPlatform,
+class QnxPlatform : public UniversalPlatform,
                     public SystemWindow::Delegate {
 public:
-    QNXPlatform();
+    QnxPlatform();
     /**
      * Destructor of WindowPlatform.
      */
-    ~QNXPlatform() override;
+    ~QnxPlatform() override;
     /**
      * Implementation of Windows platform initialization.
      */
