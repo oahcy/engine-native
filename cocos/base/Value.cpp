@@ -504,10 +504,10 @@ unsigned int Value::asUnsignedInt() const {
     }
 
     if (_type == Type::BOOLEAN) {
-        return _field.boolVal ? 1u : 0u;
+        return _field.boolVal ? 1U : 0U;
     }
 
-    return 0u;
+    return 0U;
 }
 
 float Value::asFloat() const {
@@ -537,10 +537,10 @@ float Value::asFloat() const {
     }
 
     if (_type == Type::BOOLEAN) {
-        return _field.boolVal ? 1.0f : 0.0f;
+        return _field.boolVal ? 1.0F : 0.0F;
     }
 
-    return 0.0f;
+    return 0.0F;
 }
 
 double Value::asDouble() const {
@@ -599,7 +599,7 @@ bool Value::asBool() const {
     }
 
     if (_type == Type::FLOAT) {
-        return _field.floatVal != 0.0f;
+        return _field.floatVal != 0.0F;
     }
 
     if (_type == Type::DOUBLE) {
