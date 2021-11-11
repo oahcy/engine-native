@@ -35,7 +35,7 @@
 #include <algorithm>
 
 #include "base/Utils.h"
-// NOLINTBEGIN(misc-no-recursion)
+
 namespace cc {
 
 const ValueVector    VALUE_VECTOR_NULL;
@@ -129,7 +129,7 @@ Value::Value(ValueMapIntKey &&v)
     *_field.intKeyMapVal = std::move(v);
 }
 
-Value::Value(const Value &other)
+Value::Value(const Value &other) //NOLINT(misc-no-recursion)
 : _type(Type::NONE) {
     *this = other;
 }
@@ -143,7 +143,7 @@ Value::~Value() {
     clear();
 }
 
-Value &Value::operator=(const Value &other) {
+Value &Value::operator=(const Value &other) { //NOLINT(misc-no-recursion)
     if (this != &other) {
         reset(other._type);
 
@@ -330,7 +330,7 @@ Value &Value::operator=(ValueMapIntKey &&v) {
 bool Value::operator!=(const Value &v) {
     return !(*this == v);
 }
-bool Value::operator!=(const Value &v) const {
+bool Value::operator!=(const Value &v) const { //NOLINT(misc-no-recursion)
     return !(*this == v);
 }
 
@@ -338,7 +338,7 @@ bool Value::operator==(const Value &v) {
     const auto &t = *this;
     return t == v;
 }
-bool Value::operator==(const Value &v) const {
+bool Value::operator==(const Value &v) const { //NOLINT(misc-no-recursion)
     if (this == &v) {
         return true;
     }
@@ -376,7 +376,7 @@ bool Value::operator==(const Value &v) const {
         case Type::MAP: {
             const auto &map1 = *(this->_field.mapVal);
             const auto &map2 = *(v._field.mapVal);
-            if (std::all_of(map1.begin(), map1.end(), [&map2](auto &kvp) {
+            if (std::all_of(map1.begin(), map1.end(), [&map2](auto &kvp) { //NOLINT(misc-no-recursion)
                 auto it = map2.find(kvp.first);
                 if (it == map2.end() || it->second != kvp.second) {
                     return false;
@@ -831,4 +831,3 @@ void Value::reset(Type type) {
 }
 
 } // namespace cc
-// NOLINTEND(misc-no-recursion)
