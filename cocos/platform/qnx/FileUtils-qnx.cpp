@@ -29,12 +29,12 @@ bool FileUtilsQNX::init() {
     // get application path
     // In QNX /proc/self/exefile is not a symbolic link; It's a regular file.
     std::ifstream file("/proc/self/exefile");
-    if(!file) {
+    if (!file) {
         return false;
     }
-    std::string   appPath;
+    std::string appPath;
     std::getline(file, appPath);
-    if(appPath.empty()) {
+    if (appPath.empty()) {
         return false;
     }
     _defaultResRootPath = appPath.substr(0, appPath.find_last_of('/'));
@@ -44,22 +44,22 @@ bool FileUtilsQNX::init() {
     const char *xdg_config_path = getenv("XDG_CONFIG_HOME");
     std::string xdgConfigPath;
     if (xdg_config_path == NULL) {
-    	xdg_config_path = getenv("HOME");
-		if(xdg_config_path) {
-    		xdgConfigPath = xdg_config_path;
-    	} 
+        xdg_config_path = getenv("HOME");
+        if (xdg_config_path) {
+            xdgConfigPath = xdg_config_path;
+        }
 #if _DEBUG
-    	// In qnx debugging mode, the environment variables of HOME cannot be obtained.
-    	// To facilitate debugging. Set a default directory
-    	if(!xdg_config_path){
-    		// Set up a user directory and resources in the same directory.
-    		xdgConfigPath = "/data/home/root";
+        // In qnx debugging mode, the environment variables of HOME cannot be obtained.
+        // To facilitate debugging. Set a default directory
+        if (!xdg_config_path) {
+            // Set up a user directory and resources in the same directory.
+            xdgConfigPath = "/data/home/root";
 
-    		// You can get the current application directory through API
-    	    // char* buf = getcwd(NULL, 0);
-    	    // xdgConfigPath = buf;
-    		// free(buf);
-    	}
+            // You can get the current application directory through API
+            // char* buf = getcwd(NULL, 0);
+            // xdgConfigPath = buf;
+            // free(buf);
+        }
 #endif
         xdgConfigPath += "/.config";
     } else {

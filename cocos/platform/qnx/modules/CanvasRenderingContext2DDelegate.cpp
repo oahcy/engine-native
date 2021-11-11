@@ -58,16 +58,15 @@ static const char gdefaultFontName[]  = "lucidasans-24";
 static const char gdefaultFontName1[] = "lucidasans";
 
 CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {
-   //_surface = cairo_image_surface_create_for_data(pointer , CAIRO_FORMAT_ARGB32,size[0], size[1], stride);
-   //_cr = cairo_create (_surface);
-   
+    //_surface = cairo_image_surface_create_for_data(pointer , CAIRO_FORMAT_ARGB32,size[0], size[1], stride);
+    //_cr = cairo_create (_surface);
 }
 
 CanvasRenderingContext2DDelegate::~CanvasRenderingContext2DDelegate() {
-    if(_cr != nullptr) {
+    if (_cr != nullptr) {
         cairo_destroy(_cr);
     }
-    if(_surface) {
+    if (_surface) {
         cairo_surface_destroy(_surface);
     }
 }
@@ -81,20 +80,19 @@ void CanvasRenderingContext2DDelegate::recreateBuffer(float w, float h) {
     auto  textureSize = static_cast<int>(_bufferWidth * _bufferHeight * 4);
     auto *data        = static_cast<int8_t *>(malloc(sizeof(int8_t) * textureSize));
     memset(data, 0x00, textureSize);
-    _imageData.fastSet((unsigned char*)data, textureSize);
+    _imageData.fastSet((unsigned char *)data, textureSize);
 
-    if(_cr) {
+    if (_cr) {
         cairo_destroy(_cr);
     }
-    if(_surface) {
+    if (_surface) {
         cairo_surface_destroy(_surface);
     }
-    _surface = cairo_image_surface_create_for_data((unsigned char*)data, CAIRO_FORMAT_ARGB32, _bufferWidth, _bufferHeight, _bufferWidth * 4);
-    _cr = cairo_create (_surface);
+    _surface = cairo_image_surface_create_for_data((unsigned char *)data, CAIRO_FORMAT_ARGB32, _bufferWidth, _bufferHeight, _bufferWidth * 4);
+    _cr      = cairo_create(_surface);
 }
 
 void CanvasRenderingContext2DDelegate::beginPath() {
-
 }
 
 void CanvasRenderingContext2DDelegate::closePath() {
@@ -102,7 +100,7 @@ void CanvasRenderingContext2DDelegate::closePath() {
 
 void CanvasRenderingContext2DDelegate::moveTo(float x, float y) {
     CCASSERT(_cr != nullptr, "Cr pointer cannot be empty");
-    cairo_move_to (_cr, x, y);
+    cairo_move_to(_cr, x, y);
 }
 
 void CanvasRenderingContext2DDelegate::lineTo(float x, float y) {
@@ -137,8 +135,8 @@ void CanvasRenderingContext2DDelegate::fillRect(float x, float y, float w, float
     }
     CCASSERT(_cr != nullptr, "Cr pointer cannot be empty");
     cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
-    cairo_rectangle (_cr, x, y, w, h);
-    cairo_fill (_cr);
+    cairo_rectangle(_cr, x, y, w, h);
+    cairo_fill(_cr);
 }
 
 void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x, float y, float /*maxWidth*/) {
@@ -150,8 +148,8 @@ void CanvasRenderingContext2DDelegate::fillText(const std::string &text, float x
     // cairo_select_font_face (_cr, "Arial", fontSlant, fontWeight);
     cairo_set_font_size(_cr, _fontSize);
     Point offsetPoint = convertDrawPoint(Point{x, y}, text);
-    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2],  _fillStyle[3]);
-    cairo_move_to (_cr, offsetPoint[0], offsetPoint[1]);
+    cairo_set_source_rgba(_cr, _fillStyle[0], _fillStyle[1], _fillStyle[2], _fillStyle[3]);
+    cairo_move_to(_cr, offsetPoint[0], offsetPoint[1]);
     cairo_show_text(_cr, text.c_str());
 }
 
@@ -177,18 +175,18 @@ void CanvasRenderingContext2DDelegate::updateFont(const std::string &fontName,
                                                   bool               oblique,
                                                   bool /* smallCaps */) {
     do {
-        _fontName = fontName;
-        _fontSize = static_cast<int>(fontSize);
+        _fontName                      = fontName;
+        _fontSize                      = static_cast<int>(fontSize);
         cairo_font_weight_t fontWeight = bold ? CAIRO_FONT_WEIGHT_BOLD : CAIRO_FONT_WEIGHT_NORMAL;
-        cairo_font_slant_t fontSlant = CAIRO_FONT_SLANT_NORMAL;
-        if(italic) {
+        cairo_font_slant_t  fontSlant  = CAIRO_FONT_SLANT_NORMAL;
+        if (italic) {
             fontSlant = CAIRO_FONT_SLANT_ITALIC;
-        } else if(oblique) {
+        } else if (oblique) {
             fontSlant = CAIRO_FONT_SLANT_OBLIQUE;
         }
         std::cout << _fontName << std::endl;
-        cairo_select_font_face (_cr, _fontName.c_str(), fontSlant, fontWeight);
-        cairo_set_font_size (_cr, _fontSize);
+        cairo_select_font_face(_cr, _fontName.c_str(), fontSlant, fontWeight);
+        cairo_set_font_size(_cr, _fontSize);
     } while (false);
 }
 
@@ -221,8 +219,8 @@ void CanvasRenderingContext2DDelegate::removeCustomFont() {
 
 // x, y offset value
 int CanvasRenderingContext2DDelegate::drawText(const std::string &text, int x, int y) {
-    cairo_move_to (_cr, x, y);
-    cairo_show_text (_cr, text.c_str());
+    cairo_move_to(_cr, x, y);
+    cairo_show_text(_cr, text.c_str());
     return 0;
 }
 
@@ -240,9 +238,9 @@ void CanvasRenderingContext2DDelegate::fillTextureData() {
 }
 
 std::array<float, 2> CanvasRenderingContext2DDelegate::convertDrawPoint(Point point, const std::string &text) {
-    int         font_ascent  = 0;
-    int         font_descent = 0;
-    int         direction    = 0;
+    int                  font_ascent  = 0;
+    int                  font_descent = 0;
+    int                  direction    = 0;
     cairo_text_extents_t extents;
     cairo_text_extents(_cr, text.c_str(), &extents);
 
@@ -253,12 +251,21 @@ std::array<float, 2> CanvasRenderingContext2DDelegate::convertDrawPoint(Point po
         point[0] -= width;
     }
 
-     if (_textBaseLine == CanvasTextBaseline::TOP) {
-         point[1] += -extents.y_bearing;
+    if (_textBaseLine == CanvasTextBaseline::TOP) {
+        point[1] += -extents.y_bearing;
     } else if (_textBaseLine == CanvasTextBaseline::MIDDLE) {
-         point[1] += extents.height / 2;
+        point[1] += extents.height / 2;
     } else if (_textBaseLine == CanvasTextBaseline::BOTTOM) {
-         point[1] += extents.height;
+        point[1] += extents.height;
+    }
+    if (text == ".") {
+		// The calculation of points is not the same as the calculation of numbers, 
+		// which will cause the drawing of points and numbers to be different from the same horizontal line.
+		// Therefore, here is manually adjusted to calculate the drawing coordinates of 
+		// the point according to the numerical calculation method
+        cairo_text_extents_t extentNumber;
+        cairo_text_extents(_cr, "1", &extentNumber);
+        point[1] += extents.y_bearing - extentNumber.y_bearing;
     }
 
     return point;

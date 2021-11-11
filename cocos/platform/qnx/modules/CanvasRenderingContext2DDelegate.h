@@ -87,12 +87,6 @@ private:
     std::array<float, 2> convertDrawPoint(Point point, const std::string &text);
 
 public:
-    // Display *    _dis{nullptr};
-    // int          _screen{0};
-    // Drawable     _win{0};
-    // Drawable     _pixmap{0};
-    // XFontStruct *_font{0};
-    // GC           _gc;
     cairo_surface_t *_surface{nullptr};
     cairo_t *        _cr{nullptr};
 

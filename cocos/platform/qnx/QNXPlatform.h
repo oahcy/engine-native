@@ -25,9 +25,10 @@
 
 #pragma once
 
+#include <screen/screen.h>
 #include "platform/UniversalPlatform.h"
 #include "platform/qnx/modules/SystemWindow.h"
-#include <screen/screen.h>
+
 struct SDL_WindowEvent;
 struct SDL_Window;
 
@@ -54,17 +55,17 @@ public:
                                     int h, int flags) override;
     uintptr_t          getWindowHandler() const override;
     struct SDL_Window* getWindow() {
-        return nullptr;//_handle;
+        return nullptr; //_handle;
     }
 
 private:
-    SDL_Window* _handle;
-    void               pollEvent() override;
-    void               handleWindowEvent(SDL_WindowEvent& wevent);
-    bool               _inited{false};
-    bool               _quit{false};
+    SDL_Window*      _handle;
+    void             pollEvent() override;
+    void             handleWindowEvent(SDL_WindowEvent& wevent);
+    bool             _inited{false};
+    bool             _quit{false};
     screen_context_t _screenCtx;
-    screen_window_t _screenWin;
+    screen_window_t  _screenWin;
 };
 
 } // namespace cc

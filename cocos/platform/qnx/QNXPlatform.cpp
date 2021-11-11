@@ -30,12 +30,12 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_main.h"
-#include "SDL2/SDL_syswm.h"
 #include "SDL2/SDL_sysvideo.h"
+#include "SDL2/SDL_syswm.h"
+
 
 #include "platform/interfaces/OSInterface.h"
 #include "platform/interfaces/modules/ISystemWindow.h"
-
 
 namespace {
 
@@ -161,10 +161,10 @@ QNXPlatform::~QNXPlatform() {
     // if (_inited) {
     //     SDL_Quit();
     // }
-    if(_screenWin) {
+    if (_screenWin) {
         screen_destroy_window(_screenWin);
     }
-    if(_screenCtx) {
+    if (_screenCtx) {
         screen_destroy_context(_screenCtx);
     }
 }
@@ -397,11 +397,11 @@ bool QNXPlatform::createWindow(const char *title,
         return EXIT_FAILURE;
     }
 
-    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_FORMAT, (const int[]){ SCREEN_FORMAT_RGBX8888 });
-    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_USAGE, (const int[]){ SCREEN_USAGE_OPENGL_ES2 });
+    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_FORMAT, (const int[]){SCREEN_FORMAT_RGBX8888});
+    screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_USAGE, (const int[]){SCREEN_USAGE_OPENGL_ES2});
 
-    int size[2] = { w, h };      /* size of the window on screen */
-    rc = screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_SIZE, size);
+    int size[2] = {w, h}; /* size of the window on screen */
+    rc          = screen_set_window_property_iv(_screenWin, SCREEN_PROPERTY_SIZE, size);
 
     int dpi = 0;
     screen_get_window_property_iv(_screenWin, SCREEN_PROPERTY_DPI, &dpi);
