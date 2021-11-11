@@ -121,8 +121,9 @@ void Manifest::loadJsonFromString(const std::string &content) {
         // Print error
         if (_json.HasParseError()) {
             size_t offset = _json.GetErrorOffset();
-            if (offset > 0)
+            if (offset > 0) {
                 offset--;
+            }
             std::string errorSnippet = content.substr(offset, 10);
             CC_LOG_DEBUG("File parse error %d at <%s>\n", _json.GetParseError(), errorSnippet.c_str());
         }
@@ -184,25 +185,23 @@ bool Manifest::versionEquals(const Manifest *b) const {
         return false;
     }
     // Check group versions
-    else {
-        std::vector<std::string>                     bGroups   = b->getGroups();
-        std::unordered_map<std::string, std::string> bGroupVer = b->getGroupVerions();
-        // Check group size
-        if (bGroups.size() != _groups.size()) {
+    std::vector<std::string>                     bGroups   = b->getGroups();
+    std::unordered_map<std::string, std::string> bGroupVer = b->getGroupVerions();
+    // Check group size
+    if (bGroups.size() != _groups.size()) {
+        return false;
+    }
+
+    // Check groups version
+    for (unsigned int i = 0; i < _groups.size(); ++i) {
+        std::string gid = _groups[i];
+        // Check group name
+        if (gid != bGroups[i]) {
             return false;
         }
-
-        // Check groups version
-        for (unsigned int i = 0; i < _groups.size(); ++i) {
-            std::string gid = _groups[i];
-            // Check group name
-            if (gid != bGroups[i]) {
-                return false;
-            }
-            // Check group version
-            if (_groupVer.at(gid) != bGroupVer.at(gid)) {
-                return false;
-            }
+        // Check group version
+        if (_groupVer.at(gid) != bGroupVer.at(gid)) {
+            return false;
         }
     }
     return true;
@@ -210,7 +209,7 @@ bool Manifest::versionEquals(const Manifest *b) const {
 
 bool Manifest::versionGreaterOrEquals(const Manifest *b, const std::function<int(const std::string &versionA, const std::string &versionB)> &handle) const {
     std::string localVersion = getVersion();
-    std::string bVersion     = b->getVersion();
+    const std::string& bVersion     = b->getVersion();
     bool        greater;
     if (handle) {
         greater = handle(localVersion, bVersion) >= 0;
@@ -284,12 +283,12 @@ std::unordered_map<std::string, Manifest::AssetDiff> Manifest::genDiff(const Man
 }
 
 void Manifest::genResumeAssetsList(DownloadUnits *units) const {
-    for (auto it = _assets.begin(); it != _assets.end(); ++it) {
-        Asset asset = it->second;
+    for (const auto &it : _assets) {
+        Asset asset = it.second;
 
         if (asset.downloadState != DownloadState::SUCCESSED && asset.downloadState != DownloadState::UNMARKED) {
             DownloadUnit unit;
-            unit.customId    = it->first;
+            unit.customId    = it.first;
             unit.srcUrl      = _packageUrl + asset.path;
             unit.storagePath = _manifestRoot + asset.path;
             unit.size        = asset.size;
@@ -302,9 +301,9 @@ std::vector<std::string> Manifest::getSearchPaths() const {
     std::vector<std::string> searchPaths;
     searchPaths.push_back(_manifestRoot);
 
-    for (int i = (int)_searchPaths.size() - 1; i >= 0; i--) {
+    for (int i = static_cast<int>(_searchPaths.size()） - 1; i >= 0; i--) {
         std::string path = _searchPaths[i];
-        if (path.size() > 0 && path[path.size() - 1] != '/') {
+        if (！path.empty() && path[path.size() - 1] != '/') {
             path.append("/");
         }
         path = _manifestRoot + path;
