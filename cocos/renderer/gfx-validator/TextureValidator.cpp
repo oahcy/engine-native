@@ -30,19 +30,13 @@
 #include "ValidationUtils.h"
 #include "base/Macros.h"
 #include "gfx-validator/SwapchainValidator.h"
+#include "gfx-base/GFXDef.h"
 
 namespace cc {
 namespace gfx {
 
 namespace {
-struct enumClassHash {
-    template <typename T>
-    std::size_t operator()(T t) const {
-        return static_cast<std::size_t>(t);
-    }
-};
-
-unordered_map<Format, Feature, enumClassHash> featureCheckMap{
+unordered_map<Format, Feature, Hasher> featureCheckMap{
     {Format::RGB8, Feature::FORMAT_RGB8},
     {Format::R11G11B10F, Feature::FORMAT_R11G11B10F},
 };

@@ -68,5 +68,12 @@ extern uint32_t formatSize(Format format, uint32_t width, uint32_t height, uint3
 
 extern uint32_t formatSurfaceSize(Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mips);
 
+struct Hasher final {
+template <typename T, typename Enable = std::enable_if_t<std::is_enum<T>::value>>
+    size_t operator()(const T& v) const {
+        return static_cast<size_t>(v);
+    }
+};
+
 } // namespace gfx
 } // namespace cc
