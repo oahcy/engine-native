@@ -343,7 +343,6 @@ static bool register_sys_localStorage(se::Object *obj) { // NOLINT(readability-i
     localStorageInit(strFilePath);
 #endif
 
-
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
         localStorageFree();
     });
