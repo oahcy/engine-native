@@ -24,19 +24,19 @@
 ****************************************************************************/
 
 #include "platform/linux/modules/Screen.h"
-#include "cocos/bindings/jswrapper/SeApi.h"
 #include "base/Macros.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
 #include <X11/Xlib.h>
+
 namespace cc {
 
 int Screen::getDPI() const {
     static int dpi = -1;
-    if (dpi == -1)
-    {
+    if (dpi == -1) {
         Display *dpy;
-        char *displayname = NULL;
-        int scr = 0; /* Screen number */
-        dpy = XOpenDisplay (displayname);
+        char *   displayname = NULL;
+        int      scr         = 0; /* Screen number */
+        dpy                  = XOpenDisplay(displayname);
         /*
          * there are 2.54 centimeters to an inch; so there are 25.4 millimeters.
          *
@@ -44,11 +44,11 @@ int Screen::getDPI() const {
          *         = N pixels / (M inch / 25.4)
          *         = N * 25.4 pixels / M inch
          */
-        double xres = ((((double) DisplayWidth(dpy,scr)) * 25.4) / 
-            ((double) DisplayWidthMM(dpy,scr)));
-        dpi = (int) (xres + 0.5);
+        double xres = ((((double)DisplayWidth(dpy, scr)) * 25.4) /
+                       ((double)DisplayWidthMM(dpy, scr)));
+        dpi         = (int)(xres + 0.5);
         //printf("dpi = %d\n", dpi);
-        XCloseDisplay (dpy);
+        XCloseDisplay(dpy);
     }
     return dpi;
 }

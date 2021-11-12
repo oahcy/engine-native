@@ -35,6 +35,8 @@
     #include "platform/ios/modules/Vibrator.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/modules/Vibrate.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/modules/Vibrate.h"
 #endif
 
 namespace cc {

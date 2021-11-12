@@ -159,9 +159,6 @@ LinuxPlatform::~LinuxPlatform() {
     if (_inited) {
         SDL_Quit();
     }
-#ifdef USE_WIN32_CONSOLE
-    FreeConsole();
-#endif
 }
 
 int32_t LinuxPlatform::init() {

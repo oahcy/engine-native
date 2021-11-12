@@ -35,6 +35,8 @@
     #include "platform/ios/modules/Network.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/modules/Network.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/modules/Network.h"
 #endif
 
 namespace cc {

@@ -35,6 +35,8 @@
     #include "platform/ios/modules/Accelerometer.h"
 #elif (CC_PLATFORM == CC_PLATFORM_LINUX)
     #include "platform/linux/modules/Accelerometer.h"
+#elif (CC_PLATFORM == CC_PLATFORM_QNX)
+    #include "platform/qnx/modules/Accelerometer.h"
 #endif
 
 namespace cc {

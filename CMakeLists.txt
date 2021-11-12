@@ -156,7 +156,7 @@ if(USE_AUDIO)
             cocos/audio/oalsoft/AudioPlayer.cpp
             cocos/audio/oalsoft/AudioPlayer.h
         )
-    elseif(LINUX)
+    elseif(LINUX OR QNX)
         cocos_source_files(
             cocos/audio/oalsoft/AudioCache.cpp
             cocos/audio/oalsoft/AudioCache.h
@@ -350,6 +350,10 @@ elseif(LINUX)
     cocos_source_files(
         cocos/main/main-linux.cpp
     )
+elseif(QNX)
+    cocos_source_files(
+        cocos/main/main-qnx.cpp
+    )
 elseif(MACOSX)
     cocos_source_files(
         cocos/main/main-mac.mm
@@ -377,6 +381,11 @@ elseif(LINUX)
     cocos_source_files(
         cocos/platform/linux/LinuxPlatform.cpp
         cocos/platform/linux/LinuxPlatform.h
+    )
+elseif(QNX)
+    cocos_source_files(
+        cocos/platform/qnx/QnxPlatform.cpp
+        cocos/platform/qnx/QnxPlatform.h
     )
 elseif(ANDROID)
     cocos_source_files(
@@ -458,6 +467,11 @@ elseif(MACOSX OR IOS)
     cocos_source_files(
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.mm
         cocos/platform/apple/modules/CanvasRenderingContext2DDelegate.h
+    )
+elseif(QNX)
+    cocos_source_files(
+        cocos/platform/qnx/modules/CanvasRenderingContext2DDelegate.cpp
+        cocos/platform/qnx/modules/CanvasRenderingContext2DDelegate.h
     )
 elseif(LINUX)
     cocos_source_files(
@@ -566,6 +580,23 @@ elseif(LINUX)
         cocos/platform/linux/modules/System.h
         cocos/platform/linux/modules/SystemWindow.cpp
         cocos/platform/linux/modules/SystemWindow.h
+    )
+elseif(QNX)
+    cocos_source_files(
+        cocos/platform/qnx/modules/Accelerometer.cpp
+        cocos/platform/qnx/modules/Accelerometer.h
+        cocos/platform/qnx/modules/Battery.cpp
+        cocos/platform/qnx/modules/Battery.h
+        cocos/platform/qnx/modules/Screen.cpp
+        cocos/platform/qnx/modules/Screen.h
+        cocos/platform/qnx/modules/Network.cpp
+        cocos/platform/qnx/modules/Network.h
+        cocos/platform/qnx/modules/Vibrate.cpp
+        cocos/platform/qnx/modules/Vibrate.h
+        cocos/platform/qnx/modules/System.cpp
+        cocos/platform/qnx/modules/System.h
+        cocos/platform/qnx/modules/SystemWindow.cpp
+        cocos/platform/qnx/modules/SystemWindow.h
     )
 endif()
 
@@ -752,14 +783,14 @@ if(NOT APPLE AND USE_SOCKET)
     )
 endif()
 
-if(WINDOWS OR LINUX)
+if(WINDOWS OR LINUX OR QNX)
     cocos_source_files(
         NO_WERROR    cocos/network/Downloader-curl.cpp
                      cocos/network/Downloader-curl.h
     )
 endif()
 
-if(WINDOWS OR MACOSX OR LINUX)
+if(WINDOWS OR MACOSX OR LINUX OR QNX)
     cocos_source_files(
         NO_WERROR    cocos/network/HttpClient.cpp
     )
@@ -883,6 +914,11 @@ elseif(LINUX)
     cocos_source_files(MODULE ccfilesystem
         cocos/platform/linux/FileUtils-linux.cpp
         cocos/platform/linux/FileUtils-linux.h
+    )
+elseif(QNX)
+    cocos_source_files(MODULE ccfilesystem
+        cocos/platform/qnx/FileUtils-qnx.cpp
+        cocos/platform/qnx/FileUtils-qnx.h
     )
 endif()
 
@@ -1845,6 +1881,10 @@ elseif(LINUX)
     cocos_source_files(
         NO_WERROR    cocos/bindings/manual/jsb_platfrom_linux.cpp
     )
+elseif(QNX)
+    cocos_source_files(
+        NO_WERROR    cocos/bindings/manual/jsb_platfrom_qnx.cpp
+    )
 endif()
 
 ############# module bindings
@@ -2038,6 +2078,12 @@ elseif(WIN32)
         )
     endif()
 elseif(LINUX)
+    if(USE_EDIT_BOX)
+        cocos_source_files(
+            NO_WERROR    cocos/ui/edit-box/EditBox-linux.cpp
+        )
+    endif()
+elseif(QNX)
     if(USE_EDIT_BOX)
         cocos_source_files(
             NO_WERROR    cocos/ui/edit-box/EditBox-linux.cpp
@@ -2384,7 +2430,14 @@ if(APPLE)
 
 endif()
 
-if(LINUX)
+if(QNX)
+    target_link_libraries(cocos2d PUBLIC
+        socket
+        ssl
+        screen
+        ${CC_EXTERNAL_LIBS}
+    )
+elseif(LINUX)
     target_link_libraries(cocos2d PUBLIC
         X11
         ${CC_EXTERNAL_LIBS}

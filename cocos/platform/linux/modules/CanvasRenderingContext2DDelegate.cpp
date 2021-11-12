@@ -62,7 +62,7 @@ static const char gdefaultFontName1[] = "lucidasans";
 CanvasRenderingContext2DDelegate::CanvasRenderingContext2DDelegate() {
     SDL_SysWMinfo wmInfo;
     SDL_VERSION(&wmInfo.version);
-    LinuxPlatform *platform = dynamic_cast<LinuxPlatform *>(BasePlatform::getPlatform());
+    LinuxPlatform *platform = nullptr;
     CCASSERT(platform != nullptr, "Platform pointer can't be null");
     SDL_GetWindowWMInfo(reinterpret_cast<SDL_Window *>(platform->getWindow()), &wmInfo);
     _dis = wmInfo.info.x11.display;

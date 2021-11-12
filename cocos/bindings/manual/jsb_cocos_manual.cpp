@@ -329,9 +329,9 @@ static bool register_sys_localStorage(se::Object *obj) { // NOLINT(readability-i
     localStorageObj->defineProperty("length", _SE(JSB_localStorage_getLength), nullptr);
 
     std::string strFilePath = cc::FileUtils::getInstance()->getWritablePath();
-    strFilePath += "/jsb.sqlite";
-    localStorageInit(strFilePath);
-
+    char path[256];
+    sprintf(path, "%s/jsb.sqlite", strFilePath.c_str());
+    localStorageInit(path);
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
         localStorageFree();
     });
