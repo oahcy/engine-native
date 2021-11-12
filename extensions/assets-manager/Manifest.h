@@ -24,8 +24,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __Manifest__
-#define __Manifest__ //NOLINT [bugprone-reserved-identifier] 
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -289,4 +288,3 @@ private:
 };
 
 NS_CC_EXT_END
-#endif /* defined(__Manifest__) */
