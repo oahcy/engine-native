@@ -24,8 +24,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __Manifest_H__
-#define __Manifest_H__
+#ifndef __MANIFEST_H__
+#define __MANIFEST_H__
 
 #include <string>
 #include <unordered_map>
@@ -289,4 +289,4 @@ private:
 };
 
 NS_CC_EXT_END
-#endif /* defined(__Manifest_H__) */
+#endif /* defined(__MANIFEST_H__) */
