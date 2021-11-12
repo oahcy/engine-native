@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.8)
-project(engin-native)
-
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/predefine.cmake)
 
 ################################# engine source code ##################################
@@ -2411,7 +2408,6 @@ if(APPLE)
         )
     elseif(IOS)
         target_link_libraries(cocos2d PUBLIC
-            "-all_load"
             "-framework QuartzCore"
             "-framework MetalPerformanceShaders"
             "-framework UIKit"
