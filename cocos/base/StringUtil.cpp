@@ -26,7 +26,7 @@
 #include "StringUtil.h"
 #include "memory/Memory.h"
 #include <string>
-#include <stdarg.h>
+#include <cstdarg>
 
 #if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     #ifndef WIN32_LEAN_AND_MEAN
@@ -59,7 +59,7 @@ int StringUtil::vprintf(char *buf, const char *last, const char *fmt, va_list ar
         return 0;
     }
 
-    int count = (int)(last - buf);
+    int count = static_cast<int>(last - buf);
     int ret   = vsnprintf(buf, count, fmt, args);
     if (ret >= count - 1) {
         return count - 1;

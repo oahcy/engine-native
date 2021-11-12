@@ -337,11 +337,13 @@ static bool register_sys_localStorage(se::Object *obj) { // NOLINT(readability-i
     // Use another way
     char path[256] = {0};
     sprintf(path, "%s/jsb.sqlite", strFilePath.c_str());
+    localStorageInit(path);
 #else
     strFilePath += "/jsb.sqlite";
+    localStorageInit(strFilePath.c_str());
 #endif
 
-    localStorageInit(path);
+
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
         localStorageFree();
     });

@@ -33,8 +33,8 @@
 
 #include "base/Log.h"
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 using namespace cc; //NOLINT
 

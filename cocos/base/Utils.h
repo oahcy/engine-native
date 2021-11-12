@@ -30,7 +30,7 @@
 #include <cerrno>
 #include <string>
 #include <vector>
-#include <limits.h>
+#include <climits>
 #include <limits>
 #include "base/Macros.h"
 #include "base/TypeDef.h"
