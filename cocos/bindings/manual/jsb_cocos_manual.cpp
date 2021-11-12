@@ -329,8 +329,18 @@ static bool register_sys_localStorage(se::Object *obj) { // NOLINT(readability-i
     localStorageObj->defineProperty("length", _SE(JSB_localStorage_getLength), nullptr);
 
     std::string strFilePath = cc::FileUtils::getInstance()->getWritablePath();
-    char path[256];
+#if defined(__QNX__) 
+    // In the QNX environment, the execution of this statement will not take effect. 
+    // Not sure why
+    // strFilePath += "/jsb.sqlite";
+
+    // Use another way
+    char path[256] = {0};
     sprintf(path, "%s/jsb.sqlite", strFilePath.c_str());
+#else
+    strFilePath += "/jsb.sqlite";
+#endif
+
     localStorageInit(path);
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
         localStorageFree();

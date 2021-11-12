@@ -28,6 +28,7 @@
 #include "platform/FileUtils.h"
 namespace cc {
 class FileUtilsLinux : public FileUtils {
+public:
     friend class FileUtils;
     bool        isFileExistInternal(const std::string &filename) const override;
     std::string getWritablePath() const override;
