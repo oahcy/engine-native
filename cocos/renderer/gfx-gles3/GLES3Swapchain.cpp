@@ -51,7 +51,7 @@ void GLES3Swapchain::doInit(const SwapchainInfo &info) {
     _gpuSwapchain       = CC_NEW(GLES3GPUSwapchain);
 #if CC_PLATFORM == CC_PLATFORM_LINUX
     auto window = reinterpret_cast<EGLNativeWindowType>(info.windowHandle);
-#elif
+#else
     auto *window = reinterpret_cast<EGLNativeWindowType>(info.windowHandle);
 #endif
 
@@ -136,7 +136,7 @@ void GLES3Swapchain::doCreateSurface(void *windowHandle) {
     auto *context = GLES3Device::getInstance()->context();
 #if CC_PLATFORM == CC_PLATFORM_LINUX
     auto window = reinterpret_cast<EGLNativeWindowType>(windowHandle);
-#elif
+#else
     auto *window = reinterpret_cast<EGLNativeWindowType>(windowHandle);
 #endif
 
