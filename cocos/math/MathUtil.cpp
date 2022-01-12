@@ -71,7 +71,7 @@ This file was modified to fit the cocos2d-x project
 #ifdef INCLUDE_SSE
     #include "math/MathUtilSSE.inl"
 #endif
-
+#include <cstring>
 #include "math/MathUtil.inl"
 
 NS_CC_MATH_BEGIN

@@ -24,6 +24,7 @@
 
 #include <array>
 #include <cmath>
+#include <cstring>
 #include "base/Log.h"
 #include "math/MathUtil.h"
 #include "math/Quaternion.h"
