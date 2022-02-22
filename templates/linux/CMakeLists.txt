@@ -1,9 +1,9 @@
-project(test)
+project(CocosGame)
 cmake_minimum_required(VERSION 3.8)
 
 
 
-set(APP_NAME "game" CACHE STRING "Project Name")
+set(APP_NAME "CocosGame" CACHE STRING "Project Name")
 project(${APP_NAME} CXX)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../common/CMakeLists.txt)

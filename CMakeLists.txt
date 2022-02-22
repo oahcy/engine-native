@@ -26,7 +26,7 @@ cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
 cc_set_if_undefined(USE_MODULES              OFF)
 #for Test
-SET(USE_SERVER_MODE true)
+SET(USE_SERVER_MODE false)
 
 
 add_definitions()
