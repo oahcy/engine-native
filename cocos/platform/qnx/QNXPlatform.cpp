@@ -30,7 +30,6 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_main.h"
-#include "SDL2/SDL_sysvideo.h"
 #include "SDL2/SDL_syswm.h"
 
 
@@ -190,7 +189,7 @@ int32_t QnxPlatform::loop() {
     onResume();
     while (!_quit) {
         curTime         = getCurrentMillSecond();
-        desiredInterval = (long)(1.0 / getFps());
+        desiredInterval = (long)(1000.0 / getFps());
 
         //pollEvent();
         actualInterval = curTime - lastTime;
