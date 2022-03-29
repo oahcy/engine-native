@@ -627,7 +627,6 @@ endif()
 ############ module log
 if(WINDOWS OR NX_WINDOWS)
 cocos_source_files(MODULE cclog
-    cocos/base/Log.cpp
     cocos/base/Log.h
 )
 endif()
